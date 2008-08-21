@@ -2,6 +2,7 @@ package com.itsalleasy.json;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,11 +11,13 @@ import com.itsalleasy.json.serializers.ObjectReferenceSerializer;
 import com.itsalleasy.json.serializers.ReferenceableSerializer;
 
 public class JsonWriter {
+	private static final Integer ZERO = new Integer(0);
 	private Map<Object, String> written;
 	private Writer writer;
 	private Object root;
 	SerializerRegistry serializerRegistry;
 	StringBuilder path = new StringBuilder();
+	private Object currentPathItem;
 
 	public JsonWriter(Writer writer, SerializerRegistry serializerRegistry, Object root) {
 		this.writer = writer;
@@ -23,21 +26,34 @@ public class JsonWriter {
 		written = new HashMap<Object, String>();
 	}
 	public void write() throws IOException{
-		write((Object)"",root);
+		write("",root);
 	}
-	public void writeAsProperty(String pathAsPropKey, Object obj) throws IOException{
+	public boolean writeProperty(String pathAsPropKey, Object obj, boolean prefixWithComma) throws IOException{
+		if( shouldFilterOut(pathAsPropKey, obj)){
+			return false;
+		}
+
+		if(prefixWithComma){
+			append(",");
+		}
 		if(!"".equals(pathAsPropKey)){
 			append('"');
 			append(pathAsPropKey);
 			append('"');
 			append(':');
 		}
+
 		write(pathAsPropKey,obj);
+		return true;
 	}
-	public void writeAsArrayItem(Integer pathAsArrayIndex, Object obj) throws IOException{
+	public void writeArrayItem(Integer pathAsArrayIndex, Object obj, boolean prefixWithComma) throws IOException{
+		if(prefixWithComma){
+			append(',');
+		}
 		write(pathAsArrayIndex, obj);
 	}
 	protected void write(Object pathItem, Object obj) throws IOException{
+		currentPathItem = pathItem;
 		findSerializerFor(pathItem, obj).toJson(obj, this);
 	}
 	protected JsonSerializer findSerializerFor(Object pathItem, Object obj){
@@ -56,7 +72,7 @@ public class JsonWriter {
 			return new ObjectReferenceSerializer(path);
 		}
 
-		return new PathAwareSerializer(pathItem, serializer);
+		return serializer;
 	}
 	private void pushPath(Object pathItem){
 		if(path.length() > 0){
@@ -81,19 +97,37 @@ public class JsonWriter {
 	public Writer getWriter() {
 		return writer;
 	}
-	class PathAwareSerializer implements JsonSerializer{ 
-		private Object pathItem;
-		private JsonSerializer serializer;
-
-		PathAwareSerializer(Object pathItem, JsonSerializer serializer){
-			this.pathItem = pathItem;
-			this.serializer = serializer;
-		}
-		public void toJson(Object obj, JsonWriter context) throws IOException {
-			pushPath(pathItem);
-			written.put(obj, path.toString());
-			serializer.toJson(obj, context);
-			popPath();
-		}
+	public boolean shouldFilterOut(String name, Object value) {
+		return 	value == null || Boolean.FALSE.equals(value) || "".equals(value) 
+				|| ZERO.equals(value) || isEmptyCollection(value) || isEmptyMap(value);
+	}
+	@SuppressWarnings("unchecked")
+	private boolean isEmptyCollection(Object value){
+		return (value instanceof Collection) && ((Collection)value).isEmpty();
+	}
+	@SuppressWarnings("unchecked")
+	private boolean isEmptyMap(Object value){
+		return (value instanceof Map) && ((Map)value).isEmpty();
+	}
+	public void beginArray(Object array) throws IOException {
+		begin('[', array);
+	}
+	public void endArray() throws IOException {
+		end(']');
+	}
+	public void beginObject(Object obj) throws IOException {
+		begin('{', obj);
+	}
+	public void endObject() throws IOException {
+		end('}');
+	}
+	protected void begin(char delim, Object obj) throws IOException{
+		pushPath(currentPathItem);
+		written.put(obj, path.toString());
+		writer.append(delim);
+	}
+	protected void end(char delim) throws IOException{
+		writer.append(delim);
+		popPath();
 	}
 }
