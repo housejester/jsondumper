@@ -27,8 +27,8 @@ public class JsonDumper {
 	}
 	
 	public void dump(Object obj, Writer writer) throws IOException{
-		JsonWriter context = new JsonWriter(writer, serializerRegistry, obj);
-		context.write();
+		JsonWriter context = new JsonWriter(writer, serializerRegistry);
+		context.write(obj);
 	}
 
 }

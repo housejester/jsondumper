@@ -14,18 +14,16 @@ public class JsonWriter {
 	private static final Integer ZERO = new Integer(0);
 	private Map<Object, String> written;
 	private Writer writer;
-	private Object root;
 	SerializerRegistry serializerRegistry;
 	StringBuilder path = new StringBuilder();
 	private Object currentPathItem;
 
-	public JsonWriter(Writer writer, SerializerRegistry serializerRegistry, Object root) {
+	public JsonWriter(Writer writer, SerializerRegistry serializerRegistry) {
 		this.writer = writer;
 		this.serializerRegistry = serializerRegistry;
-		this.root = root;
 		written = new HashMap<Object, String>();
 	}
-	public void write() throws IOException{
+	public void write(Object root) throws IOException{
 		write("",root);
 	}
 	public boolean writeProperty(String pathAsPropKey, Object obj, boolean prefixWithComma) throws IOException{
