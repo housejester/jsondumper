@@ -27,7 +27,8 @@ public class BeanNameValuePairs implements Iterable<NameValuePair>{
 			accessorList = new ArrayList<SimpleBeanPropertyAccessor>();
 			Method[] allMethods = clazz.getMethods();
 			for(Method method: allMethods){
-				if((method.getName().startsWith("get")||method.getName().startsWith("is")) && !method.getName().equals("getClass")){
+				String name = method.getName();
+				if((name.startsWith("get")||name.startsWith("is")) && !name.equals("getClass")){
 					accessorList.add(new SimpleBeanPropertyAccessor(method));
 				}
 			}
@@ -49,15 +50,10 @@ class PropertyIterator implements Iterator<NameValuePair>{
 	public boolean hasNext() {
 		return accessorIterator.hasNext();
 	}
-
 	public NameValuePair next() {
 		SimpleBeanPropertyAccessor accessor = accessorIterator.next();
 		return new NameValuePair(accessor.getName(), accessor.getValue(bean));
 	}
-
 	public void remove() {
-		// TODO Auto-generated method stub
-		
 	}
-	
 }
