@@ -56,11 +56,11 @@ public class JsonWriter {
 		}
 		write(pathAsArrayIndex, obj);
 	}
-	protected void write(Object pathItem, Object obj) throws IOException{
+	private void write(Object pathItem, Object obj) throws IOException{
 		currentPathItem = pathItem;
 		findSerializerFor(obj).toJson(obj, this);
 	}
-	protected JsonSerializer findSerializerFor(Object obj){
+	private JsonSerializer findSerializerFor(Object obj){
 		if(obj == null){
 			return NULL_SERIALIZER;
 		}
@@ -83,10 +83,7 @@ public class JsonWriter {
 	public void appendNullLiteral() throws IOException{
 		append("null");
 	}
-	public Writer getWriter() {
-		return writer;
-	}
-	public boolean shouldFilterOut(String name, Object value) {
+	private boolean shouldFilterOut(String name, Object value) {
 		return 	value == null || Boolean.FALSE.equals(value) || "".equals(value) 
 				|| ZERO.equals(value) || isEmptyCollection(value) || isEmptyMap(value);
 	}
@@ -110,12 +107,12 @@ public class JsonWriter {
 	public void endObject() throws IOException {
 		end('}');
 	}
-	protected void begin(char delim, Object obj) throws IOException{
+	private void begin(char delim, Object obj) throws IOException{
 		pushPath(currentPathItem);
 		written.put(obj, path.toString());
 		writer.append(delim);
 	}
-	protected void end(char delim) throws IOException{
+	private void end(char delim) throws IOException{
 		writer.append(delim);
 		popPath();
 	}
