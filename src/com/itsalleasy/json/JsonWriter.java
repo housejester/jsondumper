@@ -3,7 +3,7 @@ package com.itsalleasy.json;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.Map;
 
 import com.itsalleasy.json.registries.BasicInheritanceRegistry;
@@ -28,7 +28,7 @@ public class JsonWriter {
 	public JsonWriter(Writer writer, SerializerRegistry serializerRegistry) {
 		this.writer = writer;
 		this.serializerRegistry = serializerRegistry == null ? DEFAULT_SERIALIZER_REGISTRY : serializerRegistry;
-		written = new HashMap<Object, String>();
+		written = new IdentityHashMap<Object, String>();
 	}
 	public void write(Object root) throws IOException{
 		write("",root);

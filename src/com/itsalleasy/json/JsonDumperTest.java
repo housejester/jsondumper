@@ -330,6 +330,11 @@ public class JsonDumperTest extends TestCase{
 		String dump = dumper.dump(obj);
 		assertEquals("\"SIMPLE_VALUE\"", dump);
 	}
+	public void testShouldNotOutputRefsWhenObjectsAreEqualButNotSameRef(){
+ 		Object obj = Arrays.asList(new TestBean[]{new TestBean("Foo"), new TestBean("Foo")});
+		String dump = dumper.dump(obj);
+		assertEquals("[{\"name\":\"Foo\"},{\"name\":\"Foo\"}]", dump);
+	}
 	/*
 	 * public void testShouldNotAllowDangerousJavascriptInStrings()
 	 */
@@ -355,6 +360,12 @@ public class JsonDumperTest extends TestCase{
 	class TestBean{
 		private String name;
 		private Integer age;
+		public TestBean(){
+			
+		}
+		public TestBean(String name){
+			this.name = name;
+		}
 		public String getName() {
 			return name;
 		}
@@ -366,6 +377,18 @@ public class JsonDumperTest extends TestCase{
 		}
 		public void setAge(Integer age) {
 			this.age = age;
+		}
+		public boolean equals(Object obj){
+			if(obj == null || !(obj instanceof TestBean)){
+				return false;
+			}
+			if(name == null){
+				return ((TestBean)obj).name == null;
+			}
+			return name.equals(((TestBean)obj).name);
+		}
+		public int hashCode(){
+			return name == null ? 0 : name.hashCode();
 		}
 	}
 	class ParentBean extends TestBean{
