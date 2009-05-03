@@ -8,8 +8,8 @@ import java.util.Map;
 
 import com.itsalleasy.json.registries.BasicInheritanceRegistry;
 import com.itsalleasy.json.registries.CachingSerializerRegistry;
-import com.itsalleasy.json.registries.CircularReferenceSupportingRegistry;
 import com.itsalleasy.json.serializers.NullLiteralSerializer;
+import com.itsalleasy.json.serializers.ObjectReferenceSerializer;
 
 public class JsonWriter {
 	private static final Integer ZERO = new Integer(0);
@@ -27,10 +27,7 @@ public class JsonWriter {
 	}
 	public JsonWriter(Writer writer, SerializerRegistry serializerRegistry) {
 		this.writer = writer;
-		if(serializerRegistry == null){
-			serializerRegistry = DEFAULT_SERIALIZER_REGISTRY;
-		}
-		this.serializerRegistry = new CircularReferenceSupportingRegistry(this, serializerRegistry);
+		this.serializerRegistry = serializerRegistry == null ? DEFAULT_SERIALIZER_REGISTRY : serializerRegistry;
 		written = new HashMap<Object, String>();
 	}
 	public void write(Object root) throws IOException{
@@ -52,9 +49,6 @@ public class JsonWriter {
 		write(pathAsPropKey,obj);
 		return true;
 	}
-	public String getPathForWritten(Object obj){
-		return written.get(obj);
-	}
 	public void writeArrayItem(Integer pathAsArrayIndex, Object obj, boolean prefixWithComma) throws IOException{
 		if(prefixWithComma){
 			append(',');
@@ -66,7 +60,16 @@ public class JsonWriter {
 		findSerializerFor(obj).toJson(obj, this);
 	}
 	protected JsonSerializer findSerializerFor(Object obj){
-		return obj == null ? NULL_SERIALIZER : serializerRegistry.lookupSerializerFor(obj);
+		if(obj == null){
+			return NULL_SERIALIZER;
+		}
+
+		String path = written.get(obj);
+		if(path!=null){
+			return new ObjectReferenceSerializer(path);
+		}
+
+		return serializerRegistry.lookupSerializerFor(obj);		
 	}
 	public void append(String string) throws IOException {
 		writer.append(string);

@@ -5,7 +5,7 @@ import java.io.IOException;
 import com.itsalleasy.json.JsonWriter;
 import com.itsalleasy.json.JsonSerializer;
 
-public abstract class NameValuePairsSerializer implements JsonSerializer, ReferenceableSerializer{
+public abstract class NameValuePairsSerializer implements JsonSerializer{
 	public void toJson(Object obj, JsonWriter context)
 			throws IOException {
 		Iterable<NameValuePair> nameValuePairs = getNameValuePairs(obj);

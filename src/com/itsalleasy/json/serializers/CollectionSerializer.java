@@ -9,7 +9,7 @@ import java.util.Collection;
 import com.itsalleasy.json.JsonWriter;
 import com.itsalleasy.json.JsonSerializer;
 
-public class CollectionSerializer implements JsonSerializer,ReferenceableSerializer {
+public class CollectionSerializer implements JsonSerializer {
 	@SuppressWarnings("unchecked")
 	public void toJson(Object obj, JsonWriter context) throws IOException {
 		context.beginArray(obj);
