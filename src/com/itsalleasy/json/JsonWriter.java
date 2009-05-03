@@ -14,6 +14,7 @@ import com.itsalleasy.json.serializers.ObjectReferenceSerializer;
 public class JsonWriter {
 	private static final Integer ZERO = new Integer(0);
 	private static final JsonSerializer NULL_SERIALIZER = new NullLiteralSerializer();
+	private static final JsonSerializer OBJECT_REF_SERIALIZER = new ObjectReferenceSerializer();
 	private static final SerializerRegistry DEFAULT_SERIALIZER_REGISTRY = new CachingSerializerRegistry(new BasicInheritanceRegistry()); 
 		
 	private Map<Object, String> written;
@@ -64,12 +65,14 @@ public class JsonWriter {
 			return NULL_SERIALIZER;
 		}
 
-		String path = written.get(obj);
-		if(path!=null){
-			return new ObjectReferenceSerializer(path);
+		if(written.containsKey(obj)){
+			return OBJECT_REF_SERIALIZER;
 		}
 
 		return serializerRegistry.lookupSerializerFor(obj);		
+	}
+	public String getPathRefToWritten(Object obj){
+		return written.get(obj);
 	}
 	public void append(String string) throws IOException {
 		writer.append(string);
