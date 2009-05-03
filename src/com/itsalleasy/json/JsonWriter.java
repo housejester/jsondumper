@@ -44,12 +44,10 @@ public class JsonWriter {
 		if(prefixWithComma){
 			append(",");
 		}
-		if(!"".equals(pathAsPropKey)){
-			append('"');
-			append(pathAsPropKey);
-			append('"');
-			append(':');
-		}
+		append('"');
+		append(pathAsPropKey);
+		append('"');
+		append(':');
 
 		write(pathAsPropKey,obj);
 		return true;
