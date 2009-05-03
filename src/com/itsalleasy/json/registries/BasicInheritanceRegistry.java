@@ -3,7 +3,7 @@ package com.itsalleasy.json.registries;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.itsalleasy.json.JsonSerializer;
@@ -21,8 +21,9 @@ import com.itsalleasy.json.serializers.StringSerializer;
 
 public class BasicInheritanceRegistry implements SerializerRegistry{
 
-	private Map<Class<?>, JsonSerializer> serializers = new HashMap<Class<?>, JsonSerializer>();
+	private Map<Class<?>, JsonSerializer> serializers = new LinkedHashMap<Class<?>, JsonSerializer>();
 	private JsonSerializer primitiveArraySerializer = new PrimitiveArraySerializer();
+	private JsonSerializer arraySerializer = new ArraySerializer();
 	private JsonSerializer defaultSerializer;
 
 	public BasicInheritanceRegistry() {
@@ -44,7 +45,6 @@ public class BasicInheritanceRegistry implements SerializerRegistry{
 		register(Date.class, new DateSerializer());
 		register(Character.class, new StringSerializer());
 		register(Enum.class, new StringSerializer());
-		register((new Object[]{}).getClass(), new ArraySerializer());
 	}
 
 
@@ -54,18 +54,23 @@ public class BasicInheritanceRegistry implements SerializerRegistry{
 
 	public JsonSerializer lookupSerializerFor(Object obj) {
 		Class<?> objClass = obj.getClass();
+
 		JsonSerializer serializer = serializers.get(objClass);
 		if(serializer != null){
 			return serializer;
+		}
+
+		if(objClass.isArray()){
+			if(objClass.getComponentType().isPrimitive()){
+				return primitiveArraySerializer;
+			}
+			return arraySerializer;
 		}
 
 		for(Map.Entry<Class<?>,JsonSerializer> entry:serializers.entrySet()){
 			if(entry.getKey().isAssignableFrom(objClass)){
 				return entry.getValue();
 			}
-		}
-		if(objClass.isArray() && objClass.getComponentType().isPrimitive()){
-			return primitiveArraySerializer;
 		}
 		return defaultSerializer;
 	}
