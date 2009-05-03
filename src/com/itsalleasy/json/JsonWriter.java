@@ -34,27 +34,20 @@ public class JsonWriter {
 	public void write(Object root) throws IOException{
 		write("",root);
 	}
-	public boolean writeProperty(String pathAsPropKey, Object obj, boolean prefixWithComma) throws IOException{
+	public boolean writeProperty(String pathAsPropKey, Object obj, boolean isFirst) throws IOException{
 		if( filter.filter(obj, pathAsPropKey) ){
 			return false;
 		}
 
-		if(prefixWithComma){
-			append(",");
-		}
-		append('"');
-		append(pathAsPropKey);
-		append('"');
-		append(':');
-
+		beginProperty(pathAsPropKey, obj, isFirst);
 		write(pathAsPropKey,obj);
+		endProperty(pathAsPropKey, obj);
 		return true;
 	}
-	public void writeArrayItem(Integer pathAsArrayIndex, Object obj, boolean prefixWithComma) throws IOException{
-		if(prefixWithComma){
-			append(',');
-		}
+	public void writeArrayItem(Integer pathAsArrayIndex, Object obj) throws IOException{
+		beginArrayItem(pathAsArrayIndex, obj);
 		write(pathAsArrayIndex, obj);
+		endArrayItem(pathAsArrayIndex, obj);
 	}
 	private void write(Object pathItem, Object obj) throws IOException{
 		currentPathItem = pathItem;
@@ -82,6 +75,24 @@ public class JsonWriter {
 	}
 	public void appendNullLiteral() throws IOException{
 		append("null");
+	}
+	public void beginArrayItem(Integer index, Object value) throws IOException{
+		if(index > 0){
+			append(',');
+		}
+	}
+	public void beginProperty(String key, Object value, boolean isFirstProperty) throws IOException{
+		if(!isFirstProperty){
+			append(",");
+		}
+		append('"');
+		append(key);
+		append('"');
+		append(':');
+	}
+	public void endProperty(String key, Object value) throws IOException{
+	}
+	public void endArrayItem(Integer index, Object value) throws IOException{
 	}
 	public void beginArray(Object array) throws IOException {
 		begin('[', array);

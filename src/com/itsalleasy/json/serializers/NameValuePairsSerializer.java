@@ -13,7 +13,7 @@ public abstract class NameValuePairsSerializer implements JsonSerializer{
 		context.beginObject(obj);
 		boolean firstPropertyDumped = false;
 		for(NameValuePair nameValuePair:nameValuePairs){
-			firstPropertyDumped = context.writeProperty(nameValuePair.getName(), nameValuePair.getValue(), firstPropertyDumped) || firstPropertyDumped;
+			firstPropertyDumped = context.writeProperty(nameValuePair.getName(), nameValuePair.getValue(), !firstPropertyDumped) || firstPropertyDumped;
 		}
 		context.endObject();
 	}

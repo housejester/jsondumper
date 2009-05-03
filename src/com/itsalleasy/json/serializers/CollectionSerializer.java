@@ -15,7 +15,7 @@ public class CollectionSerializer implements JsonSerializer {
 		context.beginArray(obj);
 		int index = 0;
 		for(Object value:((Collection<Object>)obj)){
-			context.writeArrayItem(index, value, index>0);
+			context.writeArrayItem(index, value);
 			++index;
 		}
 		context.endArray();
