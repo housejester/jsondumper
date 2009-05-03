@@ -33,12 +33,18 @@ public class StringBuilderWriter extends Writer{
 		return this;
 	}
 	
+	@Override
+	public void write(char[] cbuf, int off, int len) throws IOException {
+		if(cbuf != null){
+			builder.append(cbuf, off, len);
+		}
+	}
+	
+	public StringBuilder getBuilder(){
+		return builder;
+	}
+
 	public String toString(){
 		return builder.toString();
 	}
-	@Override
-	public void write(char[] cbuf, int off, int len) throws IOException {
-		builder.append(cbuf, off, len);
-	}
-
 }
