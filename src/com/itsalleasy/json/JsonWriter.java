@@ -6,20 +6,30 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.itsalleasy.json.registries.BasicInheritanceRegistry;
+import com.itsalleasy.json.registries.CachingSerializerRegistry;
 import com.itsalleasy.json.registries.CircularReferenceSupportingRegistry;
 import com.itsalleasy.json.serializers.NullLiteralSerializer;
 
 public class JsonWriter {
 	private static final Integer ZERO = new Integer(0);
 	private static final JsonSerializer NULL_SERIALIZER = new NullLiteralSerializer();
+	private static final SerializerRegistry DEFAULT_SERIALIZER_REGISTRY = new CachingSerializerRegistry(new BasicInheritanceRegistry()); 
+		
 	private Map<Object, String> written;
 	private Writer writer;
 	SerializerRegistry serializerRegistry;
 	StringBuilder path = new StringBuilder();
 	private Object currentPathItem;
 
+	public JsonWriter(Writer writer){
+		this(writer, DEFAULT_SERIALIZER_REGISTRY);
+	}
 	public JsonWriter(Writer writer, SerializerRegistry serializerRegistry) {
 		this.writer = writer;
+		if(serializerRegistry == null){
+			serializerRegistry = DEFAULT_SERIALIZER_REGISTRY;
+		}
 		this.serializerRegistry = new CircularReferenceSupportingRegistry(this, serializerRegistry);
 		written = new HashMap<Object, String>();
 	}
