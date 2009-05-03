@@ -6,9 +6,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.itsalleasy.json.registries.CircularReferenceSupportingRegistry;
 import com.itsalleasy.json.serializers.NullLiteralSerializer;
-import com.itsalleasy.json.serializers.ObjectReferenceSerializer;
-import com.itsalleasy.json.serializers.ReferenceableSerializer;
 
 public class JsonWriter {
 	private static final Integer ZERO = new Integer(0);
@@ -21,7 +20,7 @@ public class JsonWriter {
 
 	public JsonWriter(Writer writer, SerializerRegistry serializerRegistry) {
 		this.writer = writer;
-		this.serializerRegistry = serializerRegistry;
+		this.serializerRegistry = new CircularReferenceSupportingRegistry(this, serializerRegistry);
 		written = new HashMap<Object, String>();
 	}
 	public void write(Object root) throws IOException{
@@ -45,6 +44,9 @@ public class JsonWriter {
 		write(pathAsPropKey,obj);
 		return true;
 	}
+	public String getPathForWritten(Object obj){
+		return written.get(obj);
+	}
 	public void writeArrayItem(Integer pathAsArrayIndex, Object obj, boolean prefixWithComma) throws IOException{
 		if(prefixWithComma){
 			append(',');
@@ -53,25 +55,10 @@ public class JsonWriter {
 	}
 	protected void write(Object pathItem, Object obj) throws IOException{
 		currentPathItem = pathItem;
-		findSerializerFor(pathItem, obj).toJson(obj, this);
+		findSerializerFor(obj).toJson(obj, this);
 	}
-	protected JsonSerializer findSerializerFor(Object pathItem, Object obj){
-		if(obj == null){
-			return NULL_SERIALIZER;
-		}
-
-		JsonSerializer serializer = serializerRegistry.lookupSerializerFor(obj);
-
-		if(!(serializer instanceof ReferenceableSerializer)){
-			return serializer;
-		}
-
-		String path = written.get(obj);
-		if(path!=null){
-			return new ObjectReferenceSerializer(path);
-		}
-
-		return serializer;
+	protected JsonSerializer findSerializerFor(Object obj){
+		return obj == null ? NULL_SERIALIZER : serializerRegistry.lookupSerializerFor(obj);
 	}
 	public void append(String string) throws IOException {
 		writer.append(string);
