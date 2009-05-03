@@ -1,7 +1,6 @@
 package com.itsalleasy.json;
 
 import java.io.IOException;
-import java.io.StringWriter;
 import java.io.Writer;
 
 public class JsonDumper {
@@ -15,7 +14,7 @@ public class JsonDumper {
 	}
 
 	public String dump(Object obj) {
-		StringWriter writer = new StringWriter();
+		StringBuilderWriter writer = new StringBuilderWriter();
 		try {
 			dump(obj, writer);
 		} catch (IOException e) {
