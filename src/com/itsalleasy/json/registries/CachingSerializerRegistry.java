@@ -14,16 +14,16 @@ public class CachingSerializerRegistry implements SerializerRegistry{
 		cache = new HashMap<Class<?>, JsonSerializer>();
 		this.target = target;
 	}
-	public JsonSerializer lookupSerializerFor(Class<?> objClass) {
-		if(!cache.containsKey(objClass)){
-			register(objClass, target.lookupSerializerFor(objClass));
+	public JsonSerializer lookupSerializerFor(Object obj) {
+		Class<?> objClass = obj.getClass();
+		JsonSerializer serializer = cache.get(objClass);
+		if(serializer == null){
+			serializer = target.lookupSerializerFor(obj);
+			cache.put(objClass, serializer);
 		}
-		return cache.get(objClass);
+		return serializer;
 	}
 
-	public void register(Class<?> clazz, JsonSerializer serializer) {
-		cache.put(clazz, serializer);
-	}
 	protected SerializerRegistry getTargetRegistry(){
 		return target;
 	}

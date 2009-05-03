@@ -4,13 +4,13 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 
-import com.itsalleasy.json.registries.BasicSerializerRegistry;
 import com.itsalleasy.json.registries.CachingSerializerRegistry;
+import com.itsalleasy.json.registries.BasicInheritanceRegistry;
 
 public class JsonDumper {
 	private SerializerRegistry serializerRegistry;
 	public JsonDumper(){
-		this(new CachingSerializerRegistry(new BasicSerializerRegistry()));
+		this(new CachingSerializerRegistry(new BasicInheritanceRegistry()));
 	}
 
 	public JsonDumper(SerializerRegistry registry){

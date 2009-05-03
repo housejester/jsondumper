@@ -60,7 +60,7 @@ public class JsonWriter {
 			return NULL_SERIALIZER;
 		}
 
-		JsonSerializer serializer = serializerRegistry.lookupSerializerFor(obj.getClass());
+		JsonSerializer serializer = serializerRegistry.lookupSerializerFor(obj);
 
 		if(!(serializer instanceof ReferenceableSerializer)){
 			return serializer;

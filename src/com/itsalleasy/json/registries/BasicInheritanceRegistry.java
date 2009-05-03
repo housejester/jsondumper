@@ -3,9 +3,11 @@ package com.itsalleasy.json.registries;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.itsalleasy.json.JsonSerializer;
+import com.itsalleasy.json.SerializerRegistry;
 import com.itsalleasy.json.serializers.ArraySerializer;
 import com.itsalleasy.json.serializers.BeanSerializer;
 import com.itsalleasy.json.serializers.BooleanSerializer;
@@ -14,15 +16,25 @@ import com.itsalleasy.json.serializers.CollectionSerializer;
 import com.itsalleasy.json.serializers.DateSerializer;
 import com.itsalleasy.json.serializers.MapSerializer;
 import com.itsalleasy.json.serializers.NumberSerializer;
+import com.itsalleasy.json.serializers.PrimitiveArraySerializer;
 import com.itsalleasy.json.serializers.StringSerializer;
 
-public class BasicSerializerRegistry extends InheritanceBasedRegistry{
+public class BasicInheritanceRegistry implements SerializerRegistry{
+
+	private Map<Class<?>, JsonSerializer> serializers = new HashMap<Class<?>, JsonSerializer>();
+	private JsonSerializer primitiveArraySerializer = new PrimitiveArraySerializer();
 	private JsonSerializer defaultSerializer;
-	public BasicSerializerRegistry(){
+
+	public BasicInheritanceRegistry() {
 		this(new BeanSerializer());
 	}
-	public BasicSerializerRegistry(JsonSerializer defaultSerializer){
+
+	public BasicInheritanceRegistry(JsonSerializer defaultSerializer){
 		this.defaultSerializer = defaultSerializer;
+		registerBasicSerializers();
+	}
+
+	private void registerBasicSerializers() {
 		register(String.class, new StringSerializer());
 		register(Number.class, new NumberSerializer());
 		register(Boolean.class, new BooleanSerializer());
@@ -34,10 +46,28 @@ public class BasicSerializerRegistry extends InheritanceBasedRegistry{
 		register(Enum.class, new StringSerializer());
 		register((new Object[]{}).getClass(), new ArraySerializer());
 	}
-	@Override
-	public JsonSerializer lookupSerializerFor(Class<?> objClass) {
-		JsonSerializer serializer = super.lookupSerializerFor(objClass);
-		return serializer != null ? serializer : defaultSerializer;
+
+
+	public void register(Class<?> clazz, JsonSerializer serializer) {
+		serializers.put(clazz, serializer);
 	}
-	
+
+	public JsonSerializer lookupSerializerFor(Object obj) {
+		Class<?> objClass = obj.getClass();
+		JsonSerializer serializer = serializers.get(objClass);
+		if(serializer != null){
+			return serializer;
+		}
+
+		for(Map.Entry<Class<?>,JsonSerializer> entry:serializers.entrySet()){
+			if(entry.getKey().isAssignableFrom(objClass)){
+				return entry.getValue();
+			}
+		}
+		if(objClass.isArray() && objClass.getComponentType().isPrimitive()){
+			return primitiveArraySerializer;
+		}
+		return defaultSerializer;
+	}
+
 }
