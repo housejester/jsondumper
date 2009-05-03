@@ -79,6 +79,9 @@ public class JsonWriter {
 	public void append(char c) throws IOException {
 		writer.append(c);
 	}
+	public void appendNullLiteral() throws IOException{
+		append("null");
+	}
 	public Writer getWriter() {
 		return writer;
 	}

@@ -10,6 +10,6 @@ import com.itsalleasy.json.JsonSerializer;
 
 public class NullLiteralSerializer implements JsonSerializer {
 	public void toJson(Object obj, JsonWriter context) throws IOException {
-		context.append("null");
+		context.appendNullLiteral();
 	}
 }
