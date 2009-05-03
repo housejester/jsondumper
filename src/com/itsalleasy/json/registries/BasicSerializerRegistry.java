@@ -18,11 +18,11 @@ import com.itsalleasy.json.serializers.StringSerializer;
 
 public class BasicSerializerRegistry extends InheritanceBasedRegistry{
 	private JsonSerializer defaultSerializer;
-	public BasicSerializerRegistry(JsonSerializer defaultSerializer){
-		this.defaultSerializer = defaultSerializer;
-	}
 	public BasicSerializerRegistry(){
 		this(new BeanSerializer());
+	}
+	public BasicSerializerRegistry(JsonSerializer defaultSerializer){
+		this.defaultSerializer = defaultSerializer;
 		register(String.class, new StringSerializer());
 		register(Number.class, new NumberSerializer());
 		register(Boolean.class, new BooleanSerializer());
@@ -37,10 +37,7 @@ public class BasicSerializerRegistry extends InheritanceBasedRegistry{
 	@Override
 	public JsonSerializer lookupSerializerFor(Class<?> objClass) {
 		JsonSerializer serializer = super.lookupSerializerFor(objClass);
-		if( serializer != null){
-			return serializer;
-		}
-		return defaultSerializer;
+		return serializer != null ? serializer : defaultSerializer;
 	}
 	
 }

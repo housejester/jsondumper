@@ -15,7 +15,7 @@ public class StringSerializer implements JsonSerializer {
 		context.append('"');
 	}
     private void escape(String string, JsonWriter writer) throws IOException {
-        int          len = string.length();
+        int len = string.length();
         for (int i = 0; i < len; i ++) {
             char c = string.charAt(i);
             switch (c) {

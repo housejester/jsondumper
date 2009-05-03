@@ -12,6 +12,7 @@ import com.itsalleasy.json.serializers.ReferenceableSerializer;
 
 public class JsonWriter {
 	private static final Integer ZERO = new Integer(0);
+	private static final JsonSerializer NULL_SERIALIZER = new NullLiteralSerializer();
 	private Map<Object, String> written;
 	private Writer writer;
 	SerializerRegistry serializerRegistry;
@@ -56,7 +57,7 @@ public class JsonWriter {
 	}
 	protected JsonSerializer findSerializerFor(Object pathItem, Object obj){
 		if(obj == null){
-			return new NullLiteralSerializer();
+			return NULL_SERIALIZER;
 		}
 
 		JsonSerializer serializer = serializerRegistry.lookupSerializerFor(obj.getClass());
@@ -71,20 +72,6 @@ public class JsonWriter {
 		}
 
 		return serializer;
-	}
-	private void pushPath(Object pathItem){
-		if(path.length() > 0){
-			path.append('.');
-		}
-		path.append(pathItem);
-	}
-	private void popPath(){
-		int index = path.lastIndexOf(".");
-		if(index == -1){
-			path = new StringBuilder();
-		}else{
-			path.delete(index, path.length());
-		}
 	}
 	public void append(String string) throws IOException {
 		writer.append(string);
@@ -127,5 +114,19 @@ public class JsonWriter {
 	protected void end(char delim) throws IOException{
 		writer.append(delim);
 		popPath();
+	}
+	private void pushPath(Object pathItem){
+		if(path.length() > 0){
+			path.append('.');
+		}
+		path.append(pathItem);
+	}
+	private void popPath(){
+		int index = path.lastIndexOf(".");
+		if(index == -1){
+			path = new StringBuilder();
+		}else{
+			path.delete(index, path.length());
+		}
 	}
 }
