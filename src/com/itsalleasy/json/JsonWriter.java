@@ -2,7 +2,6 @@ package com.itsalleasy.json;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Collection;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
@@ -12,30 +11,31 @@ import com.itsalleasy.json.serializers.NullLiteralSerializer;
 import com.itsalleasy.json.serializers.ObjectReferenceSerializer;
 
 public class JsonWriter {
-	private static final Integer ZERO = new Integer(0);
 	private static final JsonSerializer NULL_SERIALIZER = new NullLiteralSerializer();
 	private static final JsonSerializer OBJECT_REF_SERIALIZER = new ObjectReferenceSerializer();
 	private static final SerializerRegistry DEFAULT_SERIALIZER_REGISTRY = new CachingSerializerRegistry(new BasicInheritanceRegistry()); 
 		
 	private Map<Object, String> written;
+	private PropertyFilter filter;
 	private Writer writer;
 	SerializerRegistry serializerRegistry;
 	StringBuilder path = new StringBuilder();
 	private Object currentPathItem;
 
 	public JsonWriter(Writer writer){
-		this(writer, DEFAULT_SERIALIZER_REGISTRY);
+		this(writer, DEFAULT_SERIALIZER_REGISTRY, PropertyFilters.IS_DEFAULT_OR_EMPTY);
 	}
-	public JsonWriter(Writer writer, SerializerRegistry serializerRegistry) {
+	public JsonWriter(Writer writer, SerializerRegistry serializerRegistry, PropertyFilter filter) {
 		this.writer = writer;
 		this.serializerRegistry = serializerRegistry == null ? DEFAULT_SERIALIZER_REGISTRY : serializerRegistry;
+		this.filter = filter == null ? PropertyFilters.IS_DEFAULT_OR_EMPTY : filter;
 		written = new IdentityHashMap<Object, String>();
 	}
 	public void write(Object root) throws IOException{
 		write("",root);
 	}
 	public boolean writeProperty(String pathAsPropKey, Object obj, boolean prefixWithComma) throws IOException{
-		if( shouldFilterOut(pathAsPropKey, obj)){
+		if( filter.filter(obj, pathAsPropKey) ){
 			return false;
 		}
 
@@ -82,18 +82,6 @@ public class JsonWriter {
 	}
 	public void appendNullLiteral() throws IOException{
 		append("null");
-	}
-	private boolean shouldFilterOut(String name, Object value) {
-		return 	value == null || Boolean.FALSE.equals(value) || "".equals(value) 
-				|| ZERO.equals(value) || isEmptyCollection(value) || isEmptyMap(value);
-	}
-	@SuppressWarnings("unchecked")
-	private boolean isEmptyCollection(Object value){
-		return (value instanceof Collection) && ((Collection)value).isEmpty();
-	}
-	@SuppressWarnings("unchecked")
-	private boolean isEmptyMap(Object value){
-		return (value instanceof Map) && ((Map)value).isEmpty();
 	}
 	public void beginArray(Object array) throws IOException {
 		begin('[', array);

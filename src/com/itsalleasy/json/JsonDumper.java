@@ -5,12 +5,17 @@ import java.io.Writer;
 
 public class JsonDumper {
 	private SerializerRegistry serializerRegistry;
+	private PropertyFilter filter;
 	public JsonDumper(){
-		this(null);
 	}
 
 	public JsonDumper(SerializerRegistry registry){
 		this.serializerRegistry = registry;
+	}
+
+	public JsonDumper(SerializerRegistry registry, PropertyFilter filter){
+		this.serializerRegistry = registry;
+		this.filter = filter;
 	}
 
 	public String dump(Object obj) {
@@ -23,7 +28,7 @@ public class JsonDumper {
 	}
 	
 	public void dump(Object obj, Writer writer) throws IOException{
-		JsonWriter context = new JsonWriter(writer, serializerRegistry);
+		JsonWriter context = new JsonWriter(writer, serializerRegistry, filter);
 		context.write(obj);
 	}
 
