@@ -1,11 +1,16 @@
 package com.itsalleasy.json.serializers;
 
 import java.io.IOException;
+import java.io.Writer;
 
 import com.itsalleasy.json.JsonWriter;
-import com.itsalleasy.json.JsonSerializer;
+import com.itsalleasy.json.JsonSerializeHandler;
 
-public abstract class NameValuePairsSerializer implements JsonSerializer{
+public abstract class NameValuePairsSerializer implements JsonSerializeHandler{
+	public void toJson(Object obj, Writer writer) throws IOException {
+		
+	}
+	
 	public void toJson(Object obj, JsonWriter context)
 			throws IOException {
 		Iterable<NameValuePair> nameValuePairs = getNameValuePairs(obj);

@@ -11,21 +11,21 @@ import com.itsalleasy.json.serializers.NullLiteralSerializer;
 import com.itsalleasy.json.serializers.ObjectReferenceSerializer;
 
 public class JsonWriter {
-	private static final JsonSerializer NULL_SERIALIZER = new NullLiteralSerializer();
-	private static final JsonSerializer OBJECT_REF_SERIALIZER = new ObjectReferenceSerializer();
-	private static final SerializerRegistry DEFAULT_SERIALIZER_REGISTRY = new CachingSerializerRegistry(new BasicInheritanceRegistry()); 
+	private static final JsonSerializeHandler NULL_SERIALIZER = new NullLiteralSerializer();
+	private static final JsonSerializeHandler OBJECT_REF_SERIALIZER = new ObjectReferenceSerializer();
+	private static final SerializerHandlerRegistry DEFAULT_SERIALIZER_REGISTRY = new CachingSerializerRegistry(new BasicInheritanceRegistry()); 
 		
 	private Map<Object, String> written;
 	private PropertyFilter filter;
 	private Writer writer;
-	SerializerRegistry serializerRegistry;
+	SerializerHandlerRegistry serializerRegistry;
 	StringBuilder path = new StringBuilder();
 	private Object currentPathItem;
 
 	public JsonWriter(Writer writer){
 		this(writer, DEFAULT_SERIALIZER_REGISTRY, PropertyFilters.IS_DEFAULT_OR_EMPTY);
 	}
-	public JsonWriter(Writer writer, SerializerRegistry serializerRegistry, PropertyFilter filter) {
+	public JsonWriter(Writer writer, SerializerHandlerRegistry serializerRegistry, PropertyFilter filter) {
 		this.writer = writer;
 		this.serializerRegistry = serializerRegistry == null ? DEFAULT_SERIALIZER_REGISTRY : serializerRegistry;
 		this.filter = filter == null ? PropertyFilters.IS_DEFAULT_OR_EMPTY : filter;
@@ -53,7 +53,7 @@ public class JsonWriter {
 		currentPathItem = pathItem;
 		findSerializerFor(obj).toJson(obj, this);
 	}
-	private JsonSerializer findSerializerFor(Object obj){
+	private JsonSerializeHandler findSerializerFor(Object obj){
 		if(obj == null){
 			return NULL_SERIALIZER;
 		}
