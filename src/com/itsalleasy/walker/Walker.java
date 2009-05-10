@@ -16,8 +16,12 @@ public class Walker {
 	private PropertyFilter filter = PropertyFilters.IS_DEFAULT_OR_EMPTY;
 	private TrackingPolicy trackingPolicy;
 	public Walker(WalkerVisitor walkerVisitor) {
+		this(walkerVisitor, new TrackingPolicyThatRemembersObjectsAndTheirPaths());
+	}
+
+	public Walker(WalkerVisitor walkerVisitor, TrackingPolicy trackingPolicy){
 		this.visitor = walkerVisitor;
-		this.trackingPolicy = new TrackingPolicyThatRemembersObjectsAndTheirPaths();
+		this.trackingPolicy = trackingPolicy;
 	}
 
 	public void walk(Object obj) {
