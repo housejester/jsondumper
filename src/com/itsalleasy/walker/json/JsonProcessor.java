@@ -37,7 +37,10 @@ public class JsonProcessor implements WalkerVisitor{
 		print(']');
 	}
 
-	public void revisit(Object obj) {
+	public void revisit(Object obj, String path) {
+		print("{\"$ref\":\"");
+		print(path);
+		print("\"}");
 	}
 
 	public void visit(Object obj) {

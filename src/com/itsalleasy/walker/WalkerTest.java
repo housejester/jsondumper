@@ -32,9 +32,6 @@ public class WalkerTest extends TestCase{
 			public void arrayEnd(Object obj){
 				arrayEnds.add(obj);
 			}
-			public void revisit(Object obj){
-				revisited.add(obj);
-			}
 			public void arrayItem(Object item, int i) {
 				arrayItems.put(i, item);
 			}
@@ -43,6 +40,9 @@ public class WalkerTest extends TestCase{
 			public void beanProperty(Object value, String name, boolean isFirst) {
 			}
 			public void beanStart(Object obj) {
+			}
+			public void revisit(Object obj, String path) {
+				revisited.add(obj);
 			}
 		});
 	}

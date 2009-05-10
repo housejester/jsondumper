@@ -3,7 +3,6 @@ package com.itsalleasy.walker;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.IdentityHashMap;
 import java.util.Map;
 
 import com.itsalleasy.json.PropertyFilter;
@@ -15,9 +14,10 @@ import com.itsalleasy.json.serializers.NameValuePair;
 public class Walker {
 	private WalkerVisitor visitor;
 	private PropertyFilter filter = PropertyFilters.IS_DEFAULT_OR_EMPTY;
-	private IdentityHashMap<Object, Boolean> seen = new IdentityHashMap<Object, Boolean>();
+	private TrackingPolicy trackingPolicy;
 	public Walker(WalkerVisitor walkerVisitor) {
 		this.visitor = walkerVisitor;
+		this.trackingPolicy = new TrackingPolicyThatRemembersObjectsAndTheirPaths();
 	}
 
 	public void walk(Object obj) {
@@ -25,12 +25,12 @@ public class Walker {
 			visitor.visit(obj);
 			return;
 		}
-		if(seen.containsKey(obj)){
-			visitor.revisit(obj);
+		if(trackingPolicy.isTracked(obj)){
+			visitor.revisit(obj, trackingPolicy.getTrackedPath(obj));
 			return;
 		}
+		trackingPolicy.track(obj);
 		visitor.visit(obj);
-		seen.put(obj, true);
 
 		Iterable iterable = null;
 		if(obj instanceof Iterable){
@@ -44,8 +44,10 @@ public class Walker {
 	        visitor.arrayStart(obj);
 	        int i = 0;
 	        for(Object item : iterable){
+	        	Object pushContext = trackingPolicy.pushPath(i, item);
 	        	visitor.arrayItem(item, i++);
 	        	walk(item);
+	        	trackingPolicy.popPath(i, item, pushContext);
 	        }
 	        visitor.arrayEnd(obj);
 	        return;
@@ -64,11 +66,13 @@ public class Walker {
 	        for(NameValuePair item : propertyPairs){
 	        	Object value = item.getValue();
 	        	String name = item.getName();
+	        	Object pushContext = trackingPolicy.pushPath(name, value);
 	        	if(!filter.filter(value, name)){
 		        	visitor.beanProperty(value, name, isFirst);
 		        	isFirst = false;
 		        	walk(value);
 	        	}
+	        	trackingPolicy.popPath(name, value, pushContext);
 	        }
 	        visitor.beanEnd(obj);
 	        return;
@@ -77,11 +81,11 @@ public class Walker {
 
 	private boolean isBeanLike(Object obj) {
 		return !(
-				obj.getClass().isPrimitive() || 
 				obj instanceof String || 
 				obj instanceof Number || 
 				obj instanceof Boolean ||
 				obj instanceof Date || 
+				obj instanceof Character ||
 				obj instanceof Calendar || 
 				obj instanceof Enum 
 		);
