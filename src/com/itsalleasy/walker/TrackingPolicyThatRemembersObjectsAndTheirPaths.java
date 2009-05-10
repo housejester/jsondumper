@@ -18,7 +18,7 @@ public class TrackingPolicyThatRemembersObjectsAndTheirPaths implements Tracking
 		return seen.get(obj);
 	}
 	
-	public Object pushPath(Object pathNode, Object item) {
+	public Object pushPath(Object pathNode) {
     	int stackStart = pathStack.length();
     	if(stackStart > 0){
     		pathStack.append('.');
@@ -27,7 +27,7 @@ public class TrackingPolicyThatRemembersObjectsAndTheirPaths implements Tracking
     	return stackStart;
 	}
 
-	public void popPath(Object pathNode, Object item, Object pushContext) {
+	public void popPath(Object pathNode, Object pushContext) {
 		Integer stackStart = (Integer)pushContext;
     	pathStack.delete(stackStart, pathStack.length());
 	}

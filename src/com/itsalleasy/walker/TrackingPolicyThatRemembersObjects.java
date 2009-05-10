@@ -8,19 +8,15 @@ public class TrackingPolicyThatRemembersObjects implements TrackingPolicy{
 	public void track(Object obj) {
 		seen.put(obj, "");
 	}
-
 	public boolean isTracked(Object obj) {
 		return seen.containsKey(obj);
 	}
-
 	public String getTrackedPath(Object obj) {
 		return null;
 	}
-
-	public void popPath(Object pathNode, Object item, Object pushContext) {
-	}
-
-	public Object pushPath(Object pathNode, Object item) {
+	public Object pushPath(Object pathNode) {
 		return null;
+	}
+	public void popPath(Object pathNode, Object pushContext) {
 	}
 }

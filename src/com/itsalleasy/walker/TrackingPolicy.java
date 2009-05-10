@@ -1,9 +1,9 @@
 package com.itsalleasy.walker;
 
 public interface TrackingPolicy {
+	void track(Object obj);
 	boolean isTracked(Object obj);
 	String getTrackedPath(Object obj);
-	void track(Object obj);
-	Object pushPath(Object pathNode, Object item);
-	void popPath(Object pathNode, Object item, Object pushContext);
+	Object pushPath(Object pathNode);
+	void popPath(Object pathNode, Object pushContext);
 }

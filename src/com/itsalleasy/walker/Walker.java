@@ -48,10 +48,10 @@ public class Walker {
 	        visitor.arrayStart(obj);
 	        int i = 0;
 	        for(Object item : iterable){
-	        	Object pushContext = trackingPolicy.pushPath(i, item);
+	        	Object pushContext = trackingPolicy.pushPath(i);
 	        	visitor.arrayItem(item, i++);
 	        	walk(item);
-	        	trackingPolicy.popPath(i, item, pushContext);
+	        	trackingPolicy.popPath(i, pushContext);
 	        }
 	        visitor.arrayEnd(obj);
 	        return;
@@ -70,13 +70,13 @@ public class Walker {
 	        for(NameValuePair item : propertyPairs){
 	        	Object value = item.getValue();
 	        	String name = item.getName();
-	        	Object pushContext = trackingPolicy.pushPath(name, value);
+	        	Object pushContext = trackingPolicy.pushPath(name);
 	        	if(!filter.filter(value, name)){
 		        	visitor.beanProperty(value, name, isFirst);
 		        	isFirst = false;
 		        	walk(value);
 	        	}
-	        	trackingPolicy.popPath(name, value, pushContext);
+	        	trackingPolicy.popPath(name, pushContext);
 	        }
 	        visitor.beanEnd(obj);
 	        return;
