@@ -1,6 +1,8 @@
 package com.itsalleasy.walker;
 
 public interface WalkerVisitor {
+	void startWalk(Object object);
+	void endWalk(Object object);
 	void visit(Object object);
 	void arrayStart(Object obj);
 	void arrayEnd(Object obj);

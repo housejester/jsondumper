@@ -25,6 +25,14 @@ public class Walker {
 	}
 
 	public void walk(Object obj) {
+		visitor.startWalk(obj);
+		walkInternal(obj);
+		visitor.endWalk(obj);
+		visitor = null;
+		trackingPolicy = null;
+		
+	}
+	private void walkInternal(Object obj) {
 		if(obj == null || !isBeanLike(obj)){
 			visitor.visit(obj);
 			return;
@@ -50,7 +58,7 @@ public class Walker {
 	        for(Object item : iterable){
 	        	Object pushContext = trackingPolicy.pushPath(i);
 	        	visitor.arrayItem(item, i++);
-	        	walk(item);
+	        	walkInternal(item);
 	        	trackingPolicy.popPath(i, pushContext);
 	        }
 	        visitor.arrayEnd(obj);
@@ -74,7 +82,7 @@ public class Walker {
 	        	if(!filter.filter(value, name)){
 		        	visitor.beanProperty(value, name, isFirst);
 		        	isFirst = false;
-		        	walk(value);
+		        	walkInternal(value);
 	        	}
 	        	trackingPolicy.popPath(name, pushContext);
 	        }

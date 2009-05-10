@@ -44,6 +44,14 @@ public class WalkerTest extends TestCase{
 			public void revisit(Object obj, String path) {
 				revisited.add(obj);
 			}
+			public void endWalk(Object object) {
+				// TODO Auto-generated method stub
+				
+			}
+			public void startWalk(Object object) {
+				// TODO Auto-generated method stub
+				
+			}
 		});
 	}
 	public void testShouldWalkPrimitiveIntsWithVisitToPrimitive(){

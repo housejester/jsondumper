@@ -6,6 +6,7 @@ import java.io.Writer;
 public class JsonDumper implements JsonSerializer {
 	private SerializerHandlerRegistry serializerRegistry;
 	private PropertyFilter filter;
+	private JsonWriter context;
 	public JsonDumper(){
 	}
 
@@ -28,8 +29,34 @@ public class JsonDumper implements JsonSerializer {
 	}
 	
 	public void serialize(Object obj, Writer writer) throws IOException{
-		JsonWriter context = new JsonWriter(writer, serializerRegistry, filter);
+		context = new JsonWriter(writer, serializerRegistry, filter);
 		context.write(obj);
 	}
+
+	public SerializerHandlerRegistry getSerializerRegistry() {
+		return serializerRegistry;
+	}
+
+	public void setSerializerRegistry(SerializerHandlerRegistry serializerRegistry) {
+		this.serializerRegistry = serializerRegistry;
+	}
+
+	public PropertyFilter getFilter() {
+		return filter;
+	}
+
+	public void setFilter(PropertyFilter filter) {
+		this.filter = filter;
+	}
+
+	public JsonWriter getContext() {
+		return context;
+	}
+
+	public void setContext(JsonWriter context) {
+		this.context = context;
+	}
+	
+	
 
 }

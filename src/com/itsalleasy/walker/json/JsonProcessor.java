@@ -9,12 +9,13 @@ import com.itsalleasy.json.registries.CachingSerializerRegistry;
 import com.itsalleasy.walker.WalkerVisitor;
 
 public class JsonProcessor implements WalkerVisitor{
+	public static final SerializerHandlerRegistry DEFAULT_REGISTRY = new NullCheckRegistry(new CachingSerializerRegistry(new BasicInheritanceRegistry()));
 	private Writer writer;
-	private SerializerHandlerRegistry registry;
+	private SerializerHandlerRegistry registry = DEFAULT_REGISTRY;
 	
 	public JsonProcessor(Writer writer){
 		this.writer = writer;
-		this.registry = new NullCheckRegistry(new CachingSerializerRegistry(new BasicInheritanceRegistry()));
+		this.registry = DEFAULT_REGISTRY;
 	}
 	private final void print(char c){
 		try {
@@ -72,6 +73,20 @@ public class JsonProcessor implements WalkerVisitor{
 
 	public void beanStart(Object obj) {
 		print('{');
+	}
+	public void startWalk(Object object) {
+	}
+	public void endWalk(Object object) {
+		try {
+			writer.flush();
+		} catch (IOException e) {
+		}
+		try {
+			writer.close();
+		} catch (IOException e) {
+		}
+		writer = null;
+		registry = null;
 	}
 
 }
