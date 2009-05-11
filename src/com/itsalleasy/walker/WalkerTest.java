@@ -32,12 +32,12 @@ public class WalkerTest extends TestCase{
 			public void arrayEnd(Object obj){
 				arrayEnds.add(obj);
 			}
-			public void arrayItem(Object item, int i) {
+			public void arrayItem(int i, Object item) {
 				arrayItems.put(i, item);
 			}
 			public void beanEnd(Object obj) {
 			}
-			public void beanProperty(Object value, String name, boolean isFirst) {
+			public void beanProperty(String name, Object value, boolean isFirst) {
 			}
 			public void beanStart(Object obj) {
 			}

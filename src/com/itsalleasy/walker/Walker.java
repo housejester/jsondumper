@@ -57,7 +57,7 @@ public class Walker {
 	        int i = 0;
 	        for(Object item : iterable){
 	        	Object pushContext = trackingPolicy.pushPath(i);
-	        	visitor.arrayItem(item, i++);
+	        	visitor.arrayItem(i++, item);
 	        	walkInternal(item);
 	        	trackingPolicy.popPath(i, pushContext);
 	        }
@@ -65,30 +65,26 @@ public class Walker {
 	        return;
 		}
 		
-		if(obj != null){
-			Iterable<NameValuePair> propertyPairs;
-			if(obj instanceof Map){
-				propertyPairs = new MapNameValuePairs((Map)obj);
-			}else{
-				propertyPairs = new BeanNameValuePairs(obj);
-			}
-	        visitor.beanStart(obj);
-	        int i = 0;
-	        boolean isFirst = true;
-	        for(NameValuePair item : propertyPairs){
-	        	Object value = item.getValue();
-	        	String name = item.getName();
-	        	Object pushContext = trackingPolicy.pushPath(name);
-	        	if(!filter.filter(value, name)){
-		        	visitor.beanProperty(value, name, isFirst);
-		        	isFirst = false;
-		        	walkInternal(value);
-	        	}
-	        	trackingPolicy.popPath(name, pushContext);
-	        }
-	        visitor.beanEnd(obj);
-	        return;
+		Iterable<NameValuePair> propertyPairs;
+		if(obj instanceof Map){
+			propertyPairs = new MapNameValuePairs((Map)obj);
+		}else{
+			propertyPairs = new BeanNameValuePairs(obj);
 		}
+        visitor.beanStart(obj);
+        boolean isFirst = true;
+        for(NameValuePair item : propertyPairs){
+        	Object value = item.getValue();
+        	String name = item.getName();
+        	Object pushContext = trackingPolicy.pushPath(name);
+        	if(!filter.filter(value, name)){
+	        	visitor.beanProperty(name, value, isFirst);
+	        	isFirst = false;
+	        	walkInternal(value);
+        	}
+        	trackingPolicy.popPath(name, pushContext);
+        }
+        visitor.beanEnd(obj);
 	}
 
 	private boolean isBeanLike(Object obj) {

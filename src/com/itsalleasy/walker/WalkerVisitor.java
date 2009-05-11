@@ -7,8 +7,8 @@ public interface WalkerVisitor {
 	void arrayStart(Object obj);
 	void arrayEnd(Object obj);
 	public void revisit(Object obj, String path);
-	void arrayItem(Object item, int i);
+	void arrayItem(int index, Object item);
 	void beanStart(Object obj);
-	void beanProperty(Object value, String name, boolean isFirst);
+	void beanProperty(String name, Object value, boolean isFirst);
 	void beanEnd(Object obj);
 }
