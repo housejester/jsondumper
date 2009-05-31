@@ -23,14 +23,17 @@ public class JsonWalkerVistor implements WalkerVisitor{
 		try {
 			writer.flush();
 		} catch (IOException e) {
+			throw new JsonIOException(e);
+		} finally {
+			writer = null;
 		}
-		writer = null;
 	}
 
 	public void visit(Object obj) {
 		try {
 			APPENDERS.lookupAppenderFor(obj).append(obj, writer);
 		} catch (IOException e) {
+			throw new JsonIOException(e);
 		}
 	}
 
@@ -77,13 +80,14 @@ public class JsonWalkerVistor implements WalkerVisitor{
 		try {
 			writer.append(c);
 		} catch (IOException e) {
+			throw new JsonIOException(e);
 		}
 	}
 	private final void print(String s){
 		try {
 			writer.append(s);
 		} catch (IOException e) {
+			throw new JsonIOException(e);
 		}
 	}
-
 }
