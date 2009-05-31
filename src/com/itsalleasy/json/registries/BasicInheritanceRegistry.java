@@ -8,26 +8,20 @@ import java.util.Map;
 
 import com.itsalleasy.json.JsonSerializeHandler;
 import com.itsalleasy.json.SerializerHandlerRegistry;
-import com.itsalleasy.json.serializers.ArraySerializer;
-import com.itsalleasy.json.serializers.BeanSerializer;
 import com.itsalleasy.json.serializers.BooleanSerializer;
 import com.itsalleasy.json.serializers.CalendarSerializer;
-import com.itsalleasy.json.serializers.CollectionSerializer;
+import com.itsalleasy.json.serializers.IgnoringSerializer;
 import com.itsalleasy.json.serializers.DateSerializer;
-import com.itsalleasy.json.serializers.MapSerializer;
 import com.itsalleasy.json.serializers.NumberSerializer;
-import com.itsalleasy.json.serializers.PrimitiveArraySerializer;
 import com.itsalleasy.json.serializers.StringSerializer;
 
 public class BasicInheritanceRegistry implements SerializerHandlerRegistry{
 
 	private Map<Class<?>, JsonSerializeHandler> serializers = new LinkedHashMap<Class<?>, JsonSerializeHandler>();
-	private JsonSerializeHandler primitiveArraySerializer = new PrimitiveArraySerializer();
-	private JsonSerializeHandler arraySerializer = new ArraySerializer();
 	private JsonSerializeHandler defaultSerializer;
 
 	public BasicInheritanceRegistry() {
-		this(new BeanSerializer());
+		this(new IgnoringSerializer());
 	}
 
 	public BasicInheritanceRegistry(JsonSerializeHandler defaultSerializer){
@@ -39,8 +33,8 @@ public class BasicInheritanceRegistry implements SerializerHandlerRegistry{
 		register(String.class, new StringSerializer());
 		register(Number.class, new NumberSerializer());
 		register(Boolean.class, new BooleanSerializer());
-		register(Map.class, new MapSerializer());
-		register(Collection.class, new CollectionSerializer());
+		register(Map.class, defaultSerializer);
+		register(Collection.class, defaultSerializer);
 		register(Calendar.class, new CalendarSerializer());
 		register(Date.class, new DateSerializer());
 		register(Character.class, new StringSerializer());
@@ -61,10 +55,7 @@ public class BasicInheritanceRegistry implements SerializerHandlerRegistry{
 		}
 
 		if(objClass.isArray()){
-			if(objClass.getComponentType().isPrimitive()){
-				return primitiveArraySerializer;
-			}
-			return arraySerializer;
+			return defaultSerializer;
 		}
 
 		for(Map.Entry<Class<?>,JsonSerializeHandler> entry:serializers.entrySet()){
