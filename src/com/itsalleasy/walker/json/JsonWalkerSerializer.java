@@ -4,16 +4,10 @@ import java.io.IOException;
 import java.io.Writer;
 
 import com.itsalleasy.json.JsonSerializer;
-import com.itsalleasy.json.JsonSerializerTest;
 import com.itsalleasy.json.StringBuilderWriter;
 import com.itsalleasy.walker.Walker;
 
-public class JsonProcessorTest extends JsonSerializerTest{
-	public JsonSerializer createDumper(){
-		return new JsonWalkerSerializer();
-	}
-}
-class JsonWalkerSerializer implements JsonSerializer{
+public class JsonWalkerSerializer implements JsonSerializer{
 	private Walker walker;
 	public String serialize(Object obj) {
 		Writer writer = new StringBuilderWriter();
