@@ -11,7 +11,7 @@ import com.itsalleasy.walker.WalkerVisitor;
 public class JsonWalkerVistor implements WalkerVisitor{
 	public static final AppenderRegistry DEFAULT_APPENDER_REGISTRY = new NullCheckRegistry(new CachingAppenderRegistry(new BasicInheritanceRegistry()));
 	private Writer writer;
-	private AppenderRegistry appenders = DEFAULT_APPENDER_REGISTRY;
+	private AppenderRegistry appenders;
 	
 	public JsonWalkerVistor(Writer writer){
 		this(writer, DEFAULT_APPENDER_REGISTRY);
