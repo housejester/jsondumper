@@ -4,27 +4,20 @@ import java.io.IOException;
 import java.io.Writer;
 
 import com.itsalleasy.walker.PropertyFilter;
+import com.itsalleasy.walker.PropertyFilters;
+import com.itsalleasy.walker.TrackingPolicies;
 import com.itsalleasy.walker.TrackingPolicy;
 import com.itsalleasy.walker.Walker;
 
 public class JsonDumper implements JsonSerializer {
-	private AppenderRegistry appenders;
 	private PropertyFilter filter;
 	private TrackingPolicy trackingPolicy;
 	
 	public JsonDumper(){
+		this(PropertyFilters.IS_DEFAULT_OR_EMPTY, TrackingPolicies.TRACK_OBJECTS_AND_PATHS);
 	}
 
-	public JsonDumper(AppenderRegistry registry){
-		this(registry, null, null);
-	}
-
-	public JsonDumper(AppenderRegistry registry, PropertyFilter filter){
-		this(registry, filter, null);
-	}
-
-	public JsonDumper(AppenderRegistry appenders, PropertyFilter filter, TrackingPolicy trackingPolicy){
-		this.appenders = appenders;
+	public JsonDumper(PropertyFilter filter, TrackingPolicy trackingPolicy){
 		this.filter = filter;
 		this.trackingPolicy = trackingPolicy;
 	}
@@ -39,6 +32,6 @@ public class JsonDumper implements JsonSerializer {
 	}
 
 	public void serialize(Object obj, Writer writer) throws IOException {
-		new Walker(new JsonWalkerVistor(writer, appenders), filter, trackingPolicy).walk(obj);
+		new Walker(new JsonWalkerVistor(writer), filter, trackingPolicy.createTracker()).walk(obj);
 	}
 }

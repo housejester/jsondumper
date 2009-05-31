@@ -9,15 +9,15 @@ import java.util.Map;
 public class Walker {
 	private WalkerVisitor visitor;
 	private PropertyFilter filter = PropertyFilters.IS_DEFAULT_OR_EMPTY;
-	private TrackingPolicy trackingPolicy;
+	private Tracker trackingPolicy;
 	public Walker(WalkerVisitor walkerVisitor) {
 		this(walkerVisitor, null, null);
 	}
 
-	public Walker(WalkerVisitor walkerVisitor, PropertyFilter filter, TrackingPolicy trackingPolicy){
+	public Walker(WalkerVisitor walkerVisitor, PropertyFilter filter, Tracker trackingPolicy){
 		this.visitor = walkerVisitor;
 		this.filter = filter == null ? PropertyFilters.IS_DEFAULT_OR_EMPTY : filter;
-		this.trackingPolicy = trackingPolicy == null ? new TrackingPolicyThatRemembersObjectsAndTheirPaths() : trackingPolicy;
+		this.trackingPolicy = trackingPolicy == null ? new TrackerThatRemembersObjectsAndTheirPaths() : trackingPolicy;
 	}
 
 	public void walk(Object obj) {

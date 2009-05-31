@@ -1,6 +1,6 @@
 package com.itsalleasy.walker;
 
-public class TrackingPolicyThatDoesNotTrackAnything implements TrackingPolicy{
+public class TrackerThatDoesNotTrackAnything implements Tracker{
 	public void track(Object obj) {
 	}
 	public boolean isTracked(Object obj) {

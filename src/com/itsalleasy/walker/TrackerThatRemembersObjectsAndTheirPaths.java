@@ -2,7 +2,7 @@ package com.itsalleasy.walker;
 
 import java.util.IdentityHashMap;
 
-public class TrackingPolicyThatRemembersObjectsAndTheirPaths implements TrackingPolicy{
+public class TrackerThatRemembersObjectsAndTheirPaths implements Tracker{
 	private IdentityHashMap<Object, String> seen = new IdentityHashMap<Object, String>();
 	private StringBuilder pathStack = new StringBuilder();
 	

@@ -9,17 +9,11 @@ import com.itsalleasy.json.registries.NullCheckRegistry;
 import com.itsalleasy.walker.WalkerVisitor;
 
 public class JsonWalkerVistor implements WalkerVisitor{
-	public static final AppenderRegistry DEFAULT_APPENDER_REGISTRY = new NullCheckRegistry(new CachingAppenderRegistry(new BasicInheritanceRegistry()));
+	public static final AppenderRegistry APPENDERS = new NullCheckRegistry(new CachingAppenderRegistry(new BasicInheritanceRegistry()));
 	private Writer writer;
-	private AppenderRegistry appenders;
 	
 	public JsonWalkerVistor(Writer writer){
-		this(writer, DEFAULT_APPENDER_REGISTRY);
-	}
-	
-	public JsonWalkerVistor(Writer writer, AppenderRegistry appenders) {
 		this.writer = writer;
-		this.appenders = appenders == null ? DEFAULT_APPENDER_REGISTRY : appenders;
 	}
 
 	public void startWalk(Object object) {
@@ -30,17 +24,12 @@ public class JsonWalkerVistor implements WalkerVisitor{
 			writer.flush();
 		} catch (IOException e) {
 		}
-		try {
-			writer.close();
-		} catch (IOException e) {
-		}
 		writer = null;
-		appenders = null;
 	}
 
 	public void visit(Object obj) {
 		try {
-			appenders.lookupAppenderFor(obj).append(obj, writer);
+			APPENDERS.lookupAppenderFor(obj).append(obj, writer);
 		} catch (IOException e) {
 		}
 	}

@@ -1,7 +1,6 @@
 package com.itsalleasy.json.registries;
 
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -26,15 +25,13 @@ public class BasicInheritanceRegistry implements AppenderRegistry{
 
 	public BasicInheritanceRegistry(Appender defaultSerializer){
 		this.defaultAppender = defaultSerializer;
-		registerBasicSerializers();
+		registerBasicAppenders();
 	}
 
-	private void registerBasicSerializers() {
+	private void registerBasicAppenders() {
 		register(String.class, new StringAppender());
 		register(Number.class, new NumberAppender());
 		register(Boolean.class, new BooleanAppender());
-		register(Map.class, defaultAppender);
-		register(Collection.class, defaultAppender);
 		register(Calendar.class, new CalendarAppender());
 		register(Date.class, new DateAppender());
 		register(Character.class, new StringAppender());
@@ -52,10 +49,6 @@ public class BasicInheritanceRegistry implements AppenderRegistry{
 		Appender serializer = serializers.get(objClass);
 		if(serializer != null){
 			return serializer;
-		}
-
-		if(objClass.isArray()){
-			return defaultAppender;
 		}
 
 		for(Map.Entry<Class<?>,Appender> entry:serializers.entrySet()){
