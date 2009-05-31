@@ -18,14 +18,14 @@ import com.itsalleasy.json.appenders.StringAppender;
 public class BasicInheritanceRegistry implements AppenderRegistry{
 
 	private Map<Class<?>, Appender> serializers = new LinkedHashMap<Class<?>, Appender>();
-	private Appender defaultSerializer;
+	private Appender defaultAppender;
 
 	public BasicInheritanceRegistry() {
 		this(new IgnoringAppender());
 	}
 
 	public BasicInheritanceRegistry(Appender defaultSerializer){
-		this.defaultSerializer = defaultSerializer;
+		this.defaultAppender = defaultSerializer;
 		registerBasicSerializers();
 	}
 
@@ -33,8 +33,8 @@ public class BasicInheritanceRegistry implements AppenderRegistry{
 		register(String.class, new StringAppender());
 		register(Number.class, new NumberAppender());
 		register(Boolean.class, new BooleanAppender());
-		register(Map.class, defaultSerializer);
-		register(Collection.class, defaultSerializer);
+		register(Map.class, defaultAppender);
+		register(Collection.class, defaultAppender);
 		register(Calendar.class, new CalendarAppender());
 		register(Date.class, new DateAppender());
 		register(Character.class, new StringAppender());
@@ -46,7 +46,7 @@ public class BasicInheritanceRegistry implements AppenderRegistry{
 		serializers.put(clazz, serializer);
 	}
 
-	public Appender lookupSerializerFor(Object obj) {
+	public Appender lookupAppenderFor(Object obj) {
 		Class<?> objClass = obj.getClass();
 
 		Appender serializer = serializers.get(objClass);
@@ -55,7 +55,7 @@ public class BasicInheritanceRegistry implements AppenderRegistry{
 		}
 
 		if(objClass.isArray()){
-			return defaultSerializer;
+			return defaultAppender;
 		}
 
 		for(Map.Entry<Class<?>,Appender> entry:serializers.entrySet()){
@@ -63,7 +63,7 @@ public class BasicInheritanceRegistry implements AppenderRegistry{
 				return entry.getValue();
 			}
 		}
-		return defaultSerializer;
+		return defaultAppender;
 	}
 
 }

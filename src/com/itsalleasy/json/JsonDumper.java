@@ -8,7 +8,7 @@ import com.itsalleasy.walker.TrackingPolicy;
 import com.itsalleasy.walker.Walker;
 
 public class JsonDumper implements JsonSerializer {
-	private AppenderRegistry serializerRegistry;
+	private AppenderRegistry appenders;
 	private PropertyFilter filter;
 	private TrackingPolicy trackingPolicy;
 	
@@ -23,8 +23,8 @@ public class JsonDumper implements JsonSerializer {
 		this(registry, filter, null);
 	}
 
-	public JsonDumper(AppenderRegistry registry, PropertyFilter filter, TrackingPolicy trackingPolicy){
-		this.serializerRegistry = registry;
+	public JsonDumper(AppenderRegistry appenders, PropertyFilter filter, TrackingPolicy trackingPolicy){
+		this.appenders = appenders;
 		this.filter = filter;
 		this.trackingPolicy = trackingPolicy;
 	}
@@ -39,6 +39,6 @@ public class JsonDumper implements JsonSerializer {
 	}
 
 	public void serialize(Object obj, Writer writer) throws IOException {
-		new Walker(new JsonWalkerVistor(writer, serializerRegistry), filter, trackingPolicy).walk(obj);
+		new Walker(new JsonWalkerVistor(writer, appenders), filter, trackingPolicy).walk(obj);
 	}
 }

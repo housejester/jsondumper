@@ -5,16 +5,16 @@ import com.itsalleasy.json.AppenderRegistry;
 import com.itsalleasy.json.appenders.NullLiteralAppender;
 
 public class NullCheckRegistry implements AppenderRegistry {
-	private AppenderRegistry registry;
-	private static final Appender NULL_SERIALIZER = new NullLiteralAppender();
+	private AppenderRegistry appenders;
+	private static final Appender NULL_APPENDER = new NullLiteralAppender();
 	public NullCheckRegistry(AppenderRegistry delegate){
-		registry = delegate;
+		appenders = delegate;
 	}
-	public Appender lookupSerializerFor(Object obj) {
+	public Appender lookupAppenderFor(Object obj) {
 		if(obj == null){
-			return NULL_SERIALIZER;
+			return NULL_APPENDER;
 		}
-		return registry.lookupSerializerFor(obj);
+		return appenders.lookupAppenderFor(obj);
 	}
 
 }

@@ -1,5 +1,5 @@
 package com.itsalleasy.json;
 
 public interface AppenderRegistry {
-	public Appender lookupSerializerFor(Object obj);
+	public Appender lookupAppenderFor(Object obj);
 }

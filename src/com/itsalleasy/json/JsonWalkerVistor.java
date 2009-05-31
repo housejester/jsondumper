@@ -4,22 +4,22 @@ import java.io.IOException;
 import java.io.Writer;
 
 import com.itsalleasy.json.registries.BasicInheritanceRegistry;
-import com.itsalleasy.json.registries.CachingSerializerRegistry;
+import com.itsalleasy.json.registries.CachingAppenderRegistry;
 import com.itsalleasy.json.registries.NullCheckRegistry;
 import com.itsalleasy.walker.WalkerVisitor;
 
 public class JsonWalkerVistor implements WalkerVisitor{
-	public static final AppenderRegistry DEFAULT_REGISTRY = new NullCheckRegistry(new CachingSerializerRegistry(new BasicInheritanceRegistry()));
+	public static final AppenderRegistry DEFAULT_APPENDER_REGISTRY = new NullCheckRegistry(new CachingAppenderRegistry(new BasicInheritanceRegistry()));
 	private Writer writer;
-	private AppenderRegistry registry = DEFAULT_REGISTRY;
+	private AppenderRegistry appenders = DEFAULT_APPENDER_REGISTRY;
 	
 	public JsonWalkerVistor(Writer writer){
-		this(writer, DEFAULT_REGISTRY);
+		this(writer, DEFAULT_APPENDER_REGISTRY);
 	}
 	
-	public JsonWalkerVistor(Writer writer, AppenderRegistry registry) {
+	public JsonWalkerVistor(Writer writer, AppenderRegistry appenders) {
 		this.writer = writer;
-		this.registry = registry == null ? DEFAULT_REGISTRY : registry;
+		this.appenders = appenders == null ? DEFAULT_APPENDER_REGISTRY : appenders;
 	}
 
 	public void startWalk(Object object) {
@@ -35,12 +35,12 @@ public class JsonWalkerVistor implements WalkerVisitor{
 		} catch (IOException e) {
 		}
 		writer = null;
-		registry = null;
+		appenders = null;
 	}
 
 	public void visit(Object obj) {
 		try {
-			registry.lookupSerializerFor(obj).append(obj, writer);
+			appenders.lookupAppenderFor(obj).append(obj, writer);
 		} catch (IOException e) {
 		}
 	}
