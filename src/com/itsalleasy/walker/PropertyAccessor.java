@@ -1,4 +1,4 @@
-package com.itsalleasy.json.serializers;
+package com.itsalleasy.walker;
 
 public interface PropertyAccessor {
 

@@ -1,16 +1,16 @@
 /**
  * 
  */
-package com.itsalleasy.json.serializers;
+package com.itsalleasy.json.appenders;
 
 import java.io.IOException;
 import java.io.Writer;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 
-import com.itsalleasy.json.JsonSerializeHandler;
+import com.itsalleasy.json.Appender;
 
-public class NumberSerializer implements JsonSerializeHandler {
+public class NumberAppender implements Appender {
     private static final ThreadLocal <NumberFormat> formatter = 
         new ThreadLocal <NumberFormat> () {
             @Override protected NumberFormat initialValue() {
@@ -20,7 +20,7 @@ public class NumberSerializer implements JsonSerializeHandler {
                 return format;
             }
     	};
-	public void toJson(Object obj, Writer writer) throws IOException {
+	public void append(Object obj, Writer writer) throws IOException {
 		Number num = (Number)obj;
 		if(num instanceof Float || num instanceof Double || num instanceof BigDecimal){
 			writer.append(formatter.get().format(num));

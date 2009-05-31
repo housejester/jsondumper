@@ -1,16 +1,16 @@
 package com.itsalleasy.json.registries;
 
-import com.itsalleasy.json.JsonSerializeHandler;
-import com.itsalleasy.json.SerializerHandlerRegistry;
-import com.itsalleasy.json.serializers.NullLiteralSerializer;
+import com.itsalleasy.json.Appender;
+import com.itsalleasy.json.AppenderRegistry;
+import com.itsalleasy.json.appenders.NullLiteralAppender;
 
-public class NullCheckRegistry implements SerializerHandlerRegistry {
-	private SerializerHandlerRegistry registry;
-	private static final JsonSerializeHandler NULL_SERIALIZER = new NullLiteralSerializer();
-	public NullCheckRegistry(SerializerHandlerRegistry delegate){
+public class NullCheckRegistry implements AppenderRegistry {
+	private AppenderRegistry registry;
+	private static final Appender NULL_SERIALIZER = new NullLiteralAppender();
+	public NullCheckRegistry(AppenderRegistry delegate){
 		registry = delegate;
 	}
-	public JsonSerializeHandler lookupSerializerFor(Object obj) {
+	public Appender lookupSerializerFor(Object obj) {
 		if(obj == null){
 			return NULL_SERIALIZER;
 		}

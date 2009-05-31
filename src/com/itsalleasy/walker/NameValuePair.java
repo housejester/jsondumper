@@ -1,4 +1,4 @@
-package com.itsalleasy.json.serializers;
+package com.itsalleasy.walker;
 
 public class NameValuePair {
 	private String name;

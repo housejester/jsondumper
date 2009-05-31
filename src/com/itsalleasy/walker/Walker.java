@@ -5,11 +5,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 
-import com.itsalleasy.json.PropertyFilter;
-import com.itsalleasy.json.PropertyFilters;
-import com.itsalleasy.json.serializers.BeanNameValuePairs;
-import com.itsalleasy.json.serializers.MapNameValuePairs;
-import com.itsalleasy.json.serializers.NameValuePair;
 
 public class Walker {
 	private WalkerVisitor visitor;

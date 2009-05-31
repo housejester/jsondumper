@@ -3,20 +3,20 @@ package com.itsalleasy.json.registries;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.itsalleasy.json.JsonSerializeHandler;
-import com.itsalleasy.json.SerializerHandlerRegistry;
+import com.itsalleasy.json.Appender;
+import com.itsalleasy.json.AppenderRegistry;
 
-public class CachingSerializerRegistry implements SerializerHandlerRegistry{
-	private Map<Class<?>, JsonSerializeHandler> cache;
-	private SerializerHandlerRegistry target;
+public class CachingSerializerRegistry implements AppenderRegistry{
+	private Map<Class<?>, Appender> cache;
+	private AppenderRegistry target;
 
-	public CachingSerializerRegistry(SerializerHandlerRegistry target){
-		cache = new HashMap<Class<?>, JsonSerializeHandler>();
+	public CachingSerializerRegistry(AppenderRegistry target){
+		cache = new HashMap<Class<?>, Appender>();
 		this.target = target;
 	}
-	public JsonSerializeHandler lookupSerializerFor(Object obj) {
+	public Appender lookupSerializerFor(Object obj) {
 		Class<?> objClass = obj.getClass();
-		JsonSerializeHandler serializer = cache.get(objClass);
+		Appender serializer = cache.get(objClass);
 		if(serializer == null){
 			serializer = target.lookupSerializerFor(obj);
 			cache.put(objClass, serializer);
@@ -24,7 +24,7 @@ public class CachingSerializerRegistry implements SerializerHandlerRegistry{
 		return serializer;
 	}
 
-	protected SerializerHandlerRegistry getTargetRegistry(){
+	protected AppenderRegistry getTargetRegistry(){
 		return target;
 	}
 

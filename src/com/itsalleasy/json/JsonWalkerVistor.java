@@ -9,15 +9,15 @@ import com.itsalleasy.json.registries.NullCheckRegistry;
 import com.itsalleasy.walker.WalkerVisitor;
 
 public class JsonWalkerVistor implements WalkerVisitor{
-	public static final SerializerHandlerRegistry DEFAULT_REGISTRY = new NullCheckRegistry(new CachingSerializerRegistry(new BasicInheritanceRegistry()));
+	public static final AppenderRegistry DEFAULT_REGISTRY = new NullCheckRegistry(new CachingSerializerRegistry(new BasicInheritanceRegistry()));
 	private Writer writer;
-	private SerializerHandlerRegistry registry = DEFAULT_REGISTRY;
+	private AppenderRegistry registry = DEFAULT_REGISTRY;
 	
 	public JsonWalkerVistor(Writer writer){
 		this(writer, DEFAULT_REGISTRY);
 	}
 	
-	public JsonWalkerVistor(Writer writer, SerializerHandlerRegistry registry) {
+	public JsonWalkerVistor(Writer writer, AppenderRegistry registry) {
 		this.writer = writer;
 		this.registry = registry == null ? DEFAULT_REGISTRY : registry;
 	}
@@ -40,7 +40,7 @@ public class JsonWalkerVistor implements WalkerVisitor{
 
 	public void visit(Object obj) {
 		try {
-			registry.lookupSerializerFor(obj).toJson(obj, writer);
+			registry.lookupSerializerFor(obj).append(obj, writer);
 		} catch (IOException e) {
 		}
 	}

@@ -6,50 +6,50 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import com.itsalleasy.json.JsonSerializeHandler;
-import com.itsalleasy.json.SerializerHandlerRegistry;
-import com.itsalleasy.json.serializers.BooleanSerializer;
-import com.itsalleasy.json.serializers.CalendarSerializer;
-import com.itsalleasy.json.serializers.IgnoringSerializer;
-import com.itsalleasy.json.serializers.DateSerializer;
-import com.itsalleasy.json.serializers.NumberSerializer;
-import com.itsalleasy.json.serializers.StringSerializer;
+import com.itsalleasy.json.Appender;
+import com.itsalleasy.json.AppenderRegistry;
+import com.itsalleasy.json.appenders.BooleanAppender;
+import com.itsalleasy.json.appenders.CalendarAppender;
+import com.itsalleasy.json.appenders.DateAppender;
+import com.itsalleasy.json.appenders.IgnoringAppender;
+import com.itsalleasy.json.appenders.NumberAppender;
+import com.itsalleasy.json.appenders.StringAppender;
 
-public class BasicInheritanceRegistry implements SerializerHandlerRegistry{
+public class BasicInheritanceRegistry implements AppenderRegistry{
 
-	private Map<Class<?>, JsonSerializeHandler> serializers = new LinkedHashMap<Class<?>, JsonSerializeHandler>();
-	private JsonSerializeHandler defaultSerializer;
+	private Map<Class<?>, Appender> serializers = new LinkedHashMap<Class<?>, Appender>();
+	private Appender defaultSerializer;
 
 	public BasicInheritanceRegistry() {
-		this(new IgnoringSerializer());
+		this(new IgnoringAppender());
 	}
 
-	public BasicInheritanceRegistry(JsonSerializeHandler defaultSerializer){
+	public BasicInheritanceRegistry(Appender defaultSerializer){
 		this.defaultSerializer = defaultSerializer;
 		registerBasicSerializers();
 	}
 
 	private void registerBasicSerializers() {
-		register(String.class, new StringSerializer());
-		register(Number.class, new NumberSerializer());
-		register(Boolean.class, new BooleanSerializer());
+		register(String.class, new StringAppender());
+		register(Number.class, new NumberAppender());
+		register(Boolean.class, new BooleanAppender());
 		register(Map.class, defaultSerializer);
 		register(Collection.class, defaultSerializer);
-		register(Calendar.class, new CalendarSerializer());
-		register(Date.class, new DateSerializer());
-		register(Character.class, new StringSerializer());
-		register(Enum.class, new StringSerializer());
+		register(Calendar.class, new CalendarAppender());
+		register(Date.class, new DateAppender());
+		register(Character.class, new StringAppender());
+		register(Enum.class, new StringAppender());
 	}
 
 
-	public void register(Class<?> clazz, JsonSerializeHandler serializer) {
+	public void register(Class<?> clazz, Appender serializer) {
 		serializers.put(clazz, serializer);
 	}
 
-	public JsonSerializeHandler lookupSerializerFor(Object obj) {
+	public Appender lookupSerializerFor(Object obj) {
 		Class<?> objClass = obj.getClass();
 
-		JsonSerializeHandler serializer = serializers.get(objClass);
+		Appender serializer = serializers.get(objClass);
 		if(serializer != null){
 			return serializer;
 		}
@@ -58,7 +58,7 @@ public class BasicInheritanceRegistry implements SerializerHandlerRegistry{
 			return defaultSerializer;
 		}
 
-		for(Map.Entry<Class<?>,JsonSerializeHandler> entry:serializers.entrySet()){
+		for(Map.Entry<Class<?>,Appender> entry:serializers.entrySet()){
 			if(entry.getKey().isAssignableFrom(objClass)){
 				return entry.getValue();
 			}

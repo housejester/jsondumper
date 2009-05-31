@@ -1,15 +1,15 @@
 /**
  * 
  */
-package com.itsalleasy.json.serializers;
+package com.itsalleasy.json.appenders;
 
 import java.io.IOException;
 import java.io.Writer;
 
-import com.itsalleasy.json.JsonSerializeHandler;
+import com.itsalleasy.json.Appender;
 
-public class StringSerializer implements JsonSerializeHandler {
-	public void toJson(Object obj, Writer writer) throws IOException {
+public class StringAppender implements Appender {
+	public void append(Object obj, Writer writer) throws IOException {
 		writer.append('"');
 		this.escape(obj.toString(), writer);
 		writer.append('"');
