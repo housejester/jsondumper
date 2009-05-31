@@ -16,12 +16,13 @@ public class Walker {
 	private PropertyFilter filter = PropertyFilters.IS_DEFAULT_OR_EMPTY;
 	private TrackingPolicy trackingPolicy;
 	public Walker(WalkerVisitor walkerVisitor) {
-		this(walkerVisitor, new TrackingPolicyThatRemembersObjectsAndTheirPaths());
+		this(walkerVisitor, null, null);
 	}
 
-	public Walker(WalkerVisitor walkerVisitor, TrackingPolicy trackingPolicy){
+	public Walker(WalkerVisitor walkerVisitor, PropertyFilter filter, TrackingPolicy trackingPolicy){
 		this.visitor = walkerVisitor;
-		this.trackingPolicy = trackingPolicy;
+		this.filter = filter == null ? PropertyFilters.IS_DEFAULT_OR_EMPTY : filter;
+		this.trackingPolicy = trackingPolicy == null ? new TrackingPolicyThatRemembersObjectsAndTheirPaths() : trackingPolicy;
 	}
 
 	public void walk(Object obj) {

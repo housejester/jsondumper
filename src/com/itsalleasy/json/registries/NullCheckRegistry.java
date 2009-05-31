@@ -1,4 +1,4 @@
-package com.itsalleasy.walker.json;
+package com.itsalleasy.json.registries;
 
 import com.itsalleasy.json.JsonSerializeHandler;
 import com.itsalleasy.json.SerializerHandlerRegistry;

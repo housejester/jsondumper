@@ -1,25 +1,25 @@
-package com.itsalleasy.walker.json;
+package com.itsalleasy.json;
 
 import java.io.IOException;
 import java.io.Writer;
 
-import com.itsalleasy.json.SerializerHandlerRegistry;
 import com.itsalleasy.json.registries.BasicInheritanceRegistry;
 import com.itsalleasy.json.registries.CachingSerializerRegistry;
+import com.itsalleasy.json.registries.NullCheckRegistry;
 import com.itsalleasy.walker.WalkerVisitor;
 
-public class JsonProcessor implements WalkerVisitor{
+public class JsonWalkerVistor implements WalkerVisitor{
 	public static final SerializerHandlerRegistry DEFAULT_REGISTRY = new NullCheckRegistry(new CachingSerializerRegistry(new BasicInheritanceRegistry()));
 	private Writer writer;
 	private SerializerHandlerRegistry registry = DEFAULT_REGISTRY;
 	
-	public JsonProcessor(Writer writer){
+	public JsonWalkerVistor(Writer writer){
 		this(writer, DEFAULT_REGISTRY);
 	}
 	
-	public JsonProcessor(Writer writer, SerializerHandlerRegistry registry) {
+	public JsonWalkerVistor(Writer writer, SerializerHandlerRegistry registry) {
 		this.writer = writer;
-		this.registry = registry;
+		this.registry = registry == null ? DEFAULT_REGISTRY : registry;
 	}
 
 	public void startWalk(Object object) {
