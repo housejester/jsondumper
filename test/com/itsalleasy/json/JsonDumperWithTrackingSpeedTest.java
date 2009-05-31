@@ -1,6 +1,6 @@
 package com.itsalleasy.json;
 
-public class JsonDumperSpeedTest extends JsonSerializerSpeedTest{
+public class JsonDumperWithTrackingSpeedTest extends JsonSerializerSpeedTest{
 	@Override
 	protected JsonSerializer createDumper() {
 		return new JsonDumper();

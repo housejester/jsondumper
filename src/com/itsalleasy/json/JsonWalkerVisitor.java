@@ -3,16 +3,15 @@ package com.itsalleasy.json;
 import java.io.IOException;
 import java.io.Writer;
 
-import com.itsalleasy.json.registries.BasicInheritanceRegistry;
 import com.itsalleasy.json.registries.CachingAppenderRegistry;
 import com.itsalleasy.json.registries.NullCheckRegistry;
 import com.itsalleasy.walker.WalkerVisitor;
 
-public class JsonWalkerVistor implements WalkerVisitor{
-	public static final AppenderRegistry APPENDERS = new NullCheckRegistry(new CachingAppenderRegistry(new BasicInheritanceRegistry()));
+public class JsonWalkerVisitor implements WalkerVisitor{
+	public static final AppenderRegistry APPENDERS = new NullCheckRegistry(new CachingAppenderRegistry(new JsonWalkerAppenderRegistry()));
 	private Writer writer;
 	
-	public JsonWalkerVistor(Writer writer){
+	public JsonWalkerVisitor(Writer writer){
 		this.writer = writer;
 	}
 

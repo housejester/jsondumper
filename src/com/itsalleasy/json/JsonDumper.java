@@ -33,7 +33,7 @@ public class JsonDumper implements JsonSerializer {
 
 	public void serialize(Object obj, Writer writer) throws IOException {
 		try{
-			new Walker(new JsonWalkerVistor(writer), filter, trackingPolicy.createTracker()).walk(obj);
+			new Walker(new JsonWalkerVisitor(writer), filter, trackingPolicy.createTracker()).walk(obj);
 		}catch(JsonIOException e){
 			throw e.getIOException();
 		}
