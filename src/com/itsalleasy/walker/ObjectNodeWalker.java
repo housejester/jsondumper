@@ -1,6 +1,6 @@
 package com.itsalleasy.walker;
 
-public class ObjectNodeWalker implements NodeWalker{
+public class ObjectNodeWalker extends TrackableNodeWalker{
 
 	private Iterable<NameValuePair> propertyPairs;
 	private NodeWalker valueWalker;
@@ -12,7 +12,8 @@ public class ObjectNodeWalker implements NodeWalker{
 		this.filter = filter;
 	}
 
-	public void walk(Object obj, WalkerVisitor visitor, Tracker tracker) {
+	@Override
+	protected void doWalk(Object obj, WalkerVisitor visitor, Tracker tracker) {
         visitor.beanStart(obj);
         boolean isFirst = true;
         for(NameValuePair item : propertyPairs){

@@ -1,13 +1,14 @@
 package com.itsalleasy.walker;
 
-public class IterableNodeWalker implements NodeWalker{
+public class IterableNodeWalker extends TrackableNodeWalker{
 	private Iterable iterable;
 	private NodeWalker itemWalker;
 	public IterableNodeWalker(Iterable iterable, NodeWalker itemWalker){
 		this.iterable = iterable;
 		this.itemWalker = itemWalker;
 	}
-	public void walk(Object obj, WalkerVisitor visitor, Tracker tracker){
+	@Override
+	protected void doWalk(Object obj, WalkerVisitor visitor, Tracker tracker) {
         visitor.arrayStart(obj);
         int i = 0;
         for(Object item : iterable){
