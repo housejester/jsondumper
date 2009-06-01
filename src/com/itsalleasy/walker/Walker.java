@@ -5,39 +5,34 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 
-
 public class Walker {
-	private WalkerVisitor visitor;
-	private PropertyFilter filter = PropertyFilters.IS_DEFAULT_OR_EMPTY;
-	private Tracker trackingPolicy;
-	public Walker(WalkerVisitor walkerVisitor) {
-		this(walkerVisitor, null, null);
+	private PropertyFilter filter;
+	private TrackingPolicy trackingPolicy;
+	public Walker() {
+		this(null, null);
 	}
 
-	public Walker(WalkerVisitor walkerVisitor, PropertyFilter filter, Tracker trackingPolicy){
-		this.visitor = walkerVisitor;
-		this.filter = filter == null ? PropertyFilters.IS_DEFAULT_OR_EMPTY : filter;
-		this.trackingPolicy = trackingPolicy == null ? new TrackerThatRemembersObjectsAndTheirPaths() : trackingPolicy;
+	public Walker(PropertyFilter filter, TrackingPolicy trackingPolicy){
+		this.filter = filter == null ? PropertyFilters.FILTER_NONE : filter;
+		this.trackingPolicy = trackingPolicy == null ? TrackingPolicies.TRACK_OBJECTS : trackingPolicy;
 	}
 
-	public void walk(Object obj) {
+	public void walk(Object obj, WalkerVisitor visitor) {
 		visitor.startWalk(obj);
-		walkInternal(obj);
+		walkInternal(obj, visitor, trackingPolicy.createTracker());
 		visitor.endWalk(obj);
 		visitor = null;
-		trackingPolicy = null;
-		
 	}
-	private void walkInternal(Object obj) {
+	private void walkInternal(Object obj, WalkerVisitor visitor, Tracker tracker) {
 		if(obj == null || !isBeanLike(obj)){
 			visitor.visit(obj);
 			return;
 		}
-		if(trackingPolicy.isTracked(obj)){
-			visitor.revisit(obj, trackingPolicy.getTrackedPath(obj));
+		if(tracker.isTracked(obj)){
+			visitor.revisit(obj, tracker.getTrackedPath(obj));
 			return;
 		}
-		trackingPolicy.track(obj);
+		tracker.track(obj);
 		visitor.visit(obj);
 
 		Iterable iterable = null;
@@ -52,10 +47,10 @@ public class Walker {
 	        visitor.arrayStart(obj);
 	        int i = 0;
 	        for(Object item : iterable){
-	        	Object pushContext = trackingPolicy.pushPath(i);
+	        	Object pushContext = tracker.pushPath(i);
 	        	visitor.arrayItem(i++, item);
-	        	walkInternal(item);
-	        	trackingPolicy.popPath(i, pushContext);
+	        	walkInternal(item, visitor, tracker);
+	        	tracker.popPath(i, pushContext);
 	        }
 	        visitor.arrayEnd(obj);
 	        return;
@@ -72,13 +67,13 @@ public class Walker {
         for(NameValuePair item : propertyPairs){
         	Object value = item.getValue();
         	String name = item.getName();
-        	Object pushContext = trackingPolicy.pushPath(name);
+        	Object pushContext = tracker.pushPath(name);
         	if(!filter.filter(value, name)){
 	        	visitor.beanProperty(name, value, isFirst);
 	        	isFirst = false;
-	        	walkInternal(value);
+	        	walkInternal(value, visitor, tracker);
         	}
-        	trackingPolicy.popPath(name, pushContext);
+        	tracker.popPath(name, pushContext);
         }
         visitor.beanEnd(obj);
 	}

@@ -55,6 +55,12 @@ public class PropertyFilters {
 			}
 		};
 	}
+	public static final PropertyFilter FILTER_NONE = new PropertyFilter(){
+		public boolean filter(Object value, String name) {
+			return false;
+		}
+	};
+
 	public static final PropertyFilter IS_DEFAULT_OR_EMPTY = chain(
 		IS_NULL, IS_FALSE, IS_EMPTY_STRING, IS_ZERO, IS_EMPTY_COLLECTION, IS_EMPTY_ARRAY, IS_EMPTY_MAP
 	);
