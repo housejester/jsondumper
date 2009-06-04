@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class BeanNameValuePairs implements Iterable<NameValuePair>{
+public class BeanNameValuePairs implements NameValuePairs{
 	private Collection<SimpleBeanPropertyAccessor> accessors;
 	private Object bean;
 	private static Map<Class<?>, List<SimpleBeanPropertyAccessor>> accessorsByClass = new HashMap<Class<?>, List<SimpleBeanPropertyAccessor>>();

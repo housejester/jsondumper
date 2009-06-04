@@ -4,7 +4,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 
-public class MapNameValuePairs implements Iterable<NameValuePair>{
+public class MapNameValuePairs implements NameValuePairs{
 	private Map<Object, Object> map;
 	public MapNameValuePairs(Map<Object, Object> map){
 		this.map = map;

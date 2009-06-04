@@ -16,19 +16,30 @@ public class BasicNodeWalkerFactory implements NodeWalkerFactory{
 		if(obj == null || !isBeanLike(obj)){
 			return VISIT_ONLY;
 		}
+		Iterable iterable = toIterable(obj);
+		if(iterable instanceof NameValuePairs){
+			return new ObjectNodeWalker((NameValuePairs)iterable, parent, filter);
+		}
+
+		return new IterableNodeWalker(iterable, parent);
+	}
+
+	private Iterable toIterable(Object obj){
 		if(obj instanceof Iterable){
-			return new IterableNodeWalker((Iterable)obj, parent);
-		}else if(obj instanceof Object[]){
-			return new IterableNodeWalker(Arrays.asList((Object[])obj), parent);
-		}else if(obj != null && obj.getClass().isArray() ){
-			return new IterableNodeWalker(new PrimitiveArrayIterable(obj), parent);
+			return (Iterable)obj;
+		}
+		if(obj instanceof Object[]){
+			return Arrays.asList((Object[])obj);
+		}
+		if(obj != null && obj.getClass().isArray() ){
+			return new PrimitiveArrayIterable(obj);
 		}
 		
 		Iterable<NameValuePair> propertyPairs = null;
 		if(obj instanceof Map){
-			return new ObjectNodeWalker(new MapNameValuePairs((Map)obj), parent, filter);
+			return new MapNameValuePairs((Map)obj);
 		}
-		return new ObjectNodeWalker(new BeanNameValuePairs(obj), parent, filter);
+		return new BeanNameValuePairs(obj);
 	}
 	private boolean isBeanLike(Object obj) {
 		return !(
