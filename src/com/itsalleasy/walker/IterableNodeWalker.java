@@ -9,14 +9,14 @@ public class IterableNodeWalker extends TrackableNodeWalker{
 	}
 	@Override
 	protected void doWalk(Object obj, WalkerVisitor visitor, Tracker tracker) {
-        visitor.arrayStart(obj);
+        visitor.beforeWalkArray(obj);
         int i = 0;
         for(Object item : iterable){
         	Object pushContext = tracker.pushPath(i);
-        	visitor.arrayItem(i++, item);
+        	visitor.beforeVisitArrayItem(item, i++);
         	itemWalker.walk(item, visitor, tracker);
         	tracker.popPath(i, pushContext);
         }
-        visitor.arrayEnd(obj);
+        visitor.afterWalkArray(obj);
 	}
 }

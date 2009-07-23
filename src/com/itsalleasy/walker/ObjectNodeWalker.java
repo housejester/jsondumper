@@ -14,20 +14,20 @@ public class ObjectNodeWalker extends TrackableNodeWalker{
 
 	@Override
 	protected void doWalk(Object obj, WalkerVisitor visitor, Tracker tracker) {
-        visitor.beanStart(obj);
+        visitor.beforeWalkBean(obj);
         boolean isFirst = true;
         for(NameValuePair item : propertyPairs){
         	Object value = item.getValue();
         	String name = item.getName();
         	Object pushContext = tracker.pushPath(name);
         	if(!filter.filter(value, name)){
-	        	visitor.beanProperty(name, value, isFirst);
+	        	visitor.beforeVisitBeanProperty(name, value, isFirst);
 	        	isFirst = false;
 	        	valueWalker.walk(value, visitor, tracker);
         	}
         	tracker.popPath(name, pushContext);
         }
-        visitor.beanEnd(obj);
+        visitor.afterWalkBean(obj);
 	}
 
 }

@@ -26,20 +26,20 @@ public class WalkerTest extends TestCase{
 			public void visit(Object obj){
 				visited.add(obj);
 			}
-			public void arrayStart(Object obj){
+			public void beforeWalkArray(Object obj){
 				arrayStarts.add(obj);
 			}
-			public void arrayEnd(Object obj){
+			public void afterWalkArray(Object obj){
 				arrayEnds.add(obj);
 			}
-			public void arrayItem(int i, Object item) {
+			public void beforeVisitArrayItem(Object item, int i) {
 				arrayItems.put(i, item);
 			}
-			public void beanEnd(Object obj) {
+			public void afterWalkBean(Object obj) {
 			}
-			public void beanProperty(String name, Object value, boolean isFirst) {
+			public void beforeVisitBeanProperty(String name, Object value, boolean isFirst) {
 			}
-			public void beanStart(Object obj) {
+			public void beforeWalkBean(Object obj) {
 			}
 			public void revisit(Object obj, String path) {
 				revisited.add(obj);

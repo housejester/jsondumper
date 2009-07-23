@@ -42,15 +42,15 @@ public class JsonWalkerVisitor implements WalkerVisitor{
 	}
 
 
-	public void beanStart(Object obj) {
+	public void beforeWalkBean(Object obj) {
 		print('{');
 	}
 
-	public void beanEnd(Object obj) {
+	public void afterWalkBean(Object obj) {
 		print('}');
 	}
 
-	public void beanProperty(String name, Object value, boolean isFirst) {
+	public void beforeVisitBeanProperty(String name, Object value, boolean isFirst) {
 		if(!isFirst){
 			print(',');
 		}
@@ -60,15 +60,15 @@ public class JsonWalkerVisitor implements WalkerVisitor{
 		print(':');
 	}
 
-	public void arrayStart(Object obj) {
+	public void beforeWalkArray(Object obj) {
 		print('[');
 	}
 
-	public void arrayEnd(Object obj) {
+	public void afterWalkArray(Object obj) {
 		print(']');
 	}
 
-	public void arrayItem(int index, Object item) {
+	public void beforeVisitArrayItem(Object item, int index) {
 		if(index!=0){
 			print(',');
 		}
