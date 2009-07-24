@@ -4,12 +4,12 @@ public class ObjectNodeWalker extends TrackableNodeWalker{
 
 	private Iterable<NameValuePair> propertyPairs;
 	private NodeWalker valueWalker;
-	private PropertyFilter filter;
+	private PropertyFilter shouldIgnore;
 	
-	public ObjectNodeWalker(Iterable<NameValuePair> propertyPairs, NodeWalker valueWalker, PropertyFilter filter){
+	public ObjectNodeWalker(Iterable<NameValuePair> propertyPairs, NodeWalker valueWalker, PropertyFilter ignoreFilter){
 		this.propertyPairs = propertyPairs;
 		this.valueWalker = valueWalker;
-		this.filter = filter;
+		this.shouldIgnore = ignoreFilter;
 	}
 
 	@Override
@@ -17,15 +17,15 @@ public class ObjectNodeWalker extends TrackableNodeWalker{
         visitor.beforeWalkBean(obj);
         boolean isFirst = true;
         for(NameValuePair item : propertyPairs){
-        	Object value = item.getValue();
         	String name = item.getName();
-        	Object pushContext = tracker.pushPath(name);
-        	if(!filter.filter(value, name)){
+        	Object value = item.getValue();
+        	if(!shouldIgnore.matches(value, name)){
+            	Object pushContext = tracker.pushPath(name);
 	        	visitor.beforeVisitBeanProperty(name, value, isFirst);
 	        	isFirst = false;
 	        	valueWalker.walk(value, visitor, tracker);
+	        	tracker.popPath(name, pushContext);
         	}
-        	tracker.popPath(name, pushContext);
         }
         visitor.afterWalkBean(obj);
 	}

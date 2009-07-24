@@ -1,5 +1,5 @@
 package com.itsalleasy.walker;
 
 public interface PropertyFilter {
-	public boolean filter(Object value, String name);
+	public boolean matches(Object value, String name);
 }
