@@ -45,8 +45,9 @@ public class BeanNameValuePairs implements NameValuePairs{
 		String name = method.getName();
 		return 
 			!(Void.TYPE.equals(method.getReturnType())) &&
+			!(Class.class.equals(method.getReturnType()))&&
 			method.getParameterTypes().length == 0 && 
-			IS_ACCESSOR.matcher(name).matches() && !name.equals("getClass");	
+			IS_ACCESSOR.matcher(name).matches();	
 	}
 }
 class PropertyIterator implements Iterator<NameValuePair>{

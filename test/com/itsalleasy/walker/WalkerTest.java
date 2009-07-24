@@ -58,7 +58,7 @@ public class WalkerTest extends TestCase{
 			}
 		};
 
-		walker = new Walker();
+		walker = new Walker(PropertyFilters.FILTER_NONE, null, null);
 	}
 	public void testShouldWalkPrimitiveIntsWithVisitToPrimitive(){
 		walker.walk(1, visitor);
@@ -157,6 +157,12 @@ public class WalkerTest extends TestCase{
 		walker.walk(new ClassWithPrivateAccessorLikeMethod(), visitor);
 		assertTrue(beanProperties.isEmpty());
 	}
+
+	public void testShouldNotWalkAccessorMethodsWithClassReturnType(){
+		walker.walk(new ClassWithAccessorOfTypeClass(), visitor);
+		assertTrue(beanProperties.isEmpty());
+	}
+
 	public void testShouldWalkValidAccessorMethodsAsBeanProperties(){
 		walker.walk(new ClassWithSingleStringBeanPropertyAccessor(), visitor);
 		assertFalse(beanProperties.isEmpty());
