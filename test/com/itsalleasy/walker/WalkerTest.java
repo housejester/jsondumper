@@ -40,7 +40,7 @@ public class WalkerTest extends TestCase{
 			}
 			public void afterWalkBean(Object obj) {
 			}
-			public void beforeVisitBeanProperty(String name, Object value, boolean isFirst) {
+			public void beforeVisitBeanProperty(Object value, String name, boolean isFirst) {
 				beanProperties.add(name);
 			}
 			public void beforeWalkBean(Object obj) {

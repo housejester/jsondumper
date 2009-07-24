@@ -21,7 +21,7 @@ public class ObjectNodeWalker extends TrackableNodeWalker{
         	Object value = item.getValue();
         	if(!shouldIgnore.matches(value, name)){
             	Object pushContext = tracker.pushPath(name);
-	        	visitor.beforeVisitBeanProperty(name, value, isFirst);
+	        	visitor.beforeVisitBeanProperty(value, name, isFirst);
 	        	isFirst = false;
 	        	valueWalker.walk(value, visitor, tracker);
 	        	tracker.popPath(name, pushContext);

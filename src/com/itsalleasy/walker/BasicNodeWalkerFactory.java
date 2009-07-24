@@ -12,13 +12,13 @@ public class BasicNodeWalkerFactory implements NodeWalkerFactory{
 		}
 	}; 
 
-	public NodeWalker create(Object obj, NodeWalker parent, PropertyFilter filter) {
+	public NodeWalker create(Object obj, NodeWalker parent, PropertyFilter ignoreFilter) {
 		if(obj == null || !isBeanLike(obj)){
 			return VISIT_ONLY;
 		}
 		Iterable iterable = toIterable(obj);
 		if(iterable instanceof NameValuePairs){
-			return new ObjectNodeWalker((NameValuePairs)iterable, parent, filter);
+			return new ObjectNodeWalker((NameValuePairs)iterable, parent, ignoreFilter);
 		}
 
 		return new IterableNodeWalker(iterable, parent);

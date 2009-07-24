@@ -50,7 +50,7 @@ public class JsonWalkerVisitor implements WalkerVisitor{
 		print('}');
 	}
 
-	public void beforeVisitBeanProperty(String name, Object value, boolean isFirst) {
+	public void beforeVisitBeanProperty(Object value, String name, boolean isFirst) {
 		if(!isFirst){
 			print(',');
 		}

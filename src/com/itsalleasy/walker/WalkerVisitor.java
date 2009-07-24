@@ -12,6 +12,6 @@ public interface WalkerVisitor {
 	void afterWalkArray(Object obj);
 
 	void beforeWalkBean(Object obj);
-	void beforeVisitBeanProperty(String name, Object value, boolean isFirst);
+	void beforeVisitBeanProperty(Object value, String name, boolean isFirst);
 	void afterWalkBean(Object obj);
 }
