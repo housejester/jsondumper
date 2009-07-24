@@ -9,6 +9,7 @@ import java.util.List;
 import junit.framework.TestCase;
 
 public class WalkerTest extends TestCase{
+	private List<String> beanProperties;
 	private List<Object> visited;
 	private List<Object> arrayStarts;
 	private List<Object> arrayEnds;
@@ -17,10 +18,12 @@ public class WalkerTest extends TestCase{
 	private Walker walker;
 	private WalkerVisitor visitor; 
 	public void setUp(){
+		beanProperties = new ArrayList<String>();
 		visited = new ArrayList<Object>();
 		arrayStarts = new ArrayList<Object>();
 		arrayEnds = new ArrayList<Object>();
 		arrayItems = new HashMap<Integer, Object>();
+		
 		revisited = new ArrayList<Object>();
 		visitor = new WalkerVisitor(){
 			public void visit(Object obj){
@@ -38,6 +41,7 @@ public class WalkerTest extends TestCase{
 			public void afterWalkBean(Object obj) {
 			}
 			public void beforeVisitBeanProperty(String name, Object value, boolean isFirst) {
+				beanProperties.add(name);
 			}
 			public void beforeWalkBean(Object obj) {
 			}
@@ -124,4 +128,38 @@ public class WalkerTest extends TestCase{
 		assertSame("foo", arrayItems.get(0));
 		assertSame("bar", arrayItems.get(1));
 	}
+	public void testShouldNotWalkAlmostBooleanBeanProperties(){
+		walker.walk(new ClassWithBooleanAccessorLikeMethod(), visitor);
+		assertTrue(beanProperties.isEmpty());
+	}
+	public void testShouldNotWalkAlmostBeanProperties(){
+		walker.walk(new ClassWithAccessorLikeMethod(), visitor);
+		assertTrue(beanProperties.isEmpty());
+	}
+	
+	public void testShouldNotWalkAccessorLikeMethodsThatTakeArguments(){
+		walker.walk(new ClassWithAccessorLikeMethodWithParam(), visitor);
+		assertTrue(beanProperties.isEmpty());
+	}
+	public void testShouldNotWalkBooleanAccessorLikeMethodsThatTakeArguments(){
+		walker.walk(new ClassWithBooleanAccessorLikeMethodWithParam(), visitor);
+		assertTrue(beanProperties.isEmpty());
+	}
+	public void testShouldNotWalkAccessorLikeMethodsThatReturnVoid(){
+		walker.walk(new ClassWithAccessorLikeMethodWithVoidReturn(), visitor);
+		assertTrue(beanProperties.isEmpty());
+	}
+	public void testShouldNotWalkBooleanAccessorLikeMethodsThatReturnVoid(){
+		walker.walk(new ClassWithBooleanAccessorLikeMethodWithVoidReturn(), visitor);
+		assertTrue(beanProperties.isEmpty());
+	}
+	public void testShouldNotWalkAccessorLikeMethodsThatArePrivate(){
+		walker.walk(new ClassWithPrivateAccessorLikeMethod(), visitor);
+		assertTrue(beanProperties.isEmpty());
+	}
+	public void testShouldWalkValidAccessorMethodsAsBeanProperties(){
+		walker.walk(new ClassWithSingleStringBeanPropertyAccessor(), visitor);
+		assertFalse(beanProperties.isEmpty());
+	}
 }
+

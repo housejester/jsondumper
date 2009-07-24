@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 
 public class BeanNameValuePairs implements NameValuePairs{
@@ -27,8 +28,7 @@ public class BeanNameValuePairs implements NameValuePairs{
 			accessorList = new ArrayList<SimpleBeanPropertyAccessor>();
 			Method[] allMethods = clazz.getMethods();
 			for(Method method: allMethods){
-				String name = method.getName();
-				if((name.startsWith("get")||name.startsWith("is")) && !name.equals("getClass")){
+				if(isAccessorMethod(method)){
 					accessorList.add(new SimpleBeanPropertyAccessor(method));
 				}
 			}
@@ -38,6 +38,15 @@ public class BeanNameValuePairs implements NameValuePairs{
 			accessorsByClass = newMap;
 		}
 		return accessorList;
+	}
+
+	private static final Pattern IS_ACCESSOR = Pattern.compile("^(get|is)[A-Z].*");
+	private static boolean isAccessorMethod(Method method) {
+		String name = method.getName();
+		return 
+			!(Void.TYPE.equals(method.getReturnType())) &&
+			method.getParameterTypes().length == 0 && 
+			IS_ACCESSOR.matcher(name).matches() && !name.equals("getClass");	
 	}
 }
 class PropertyIterator implements Iterator<NameValuePair>{
