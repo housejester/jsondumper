@@ -1,5 +1,7 @@
 package com.itsalleasy.json;
 
+import org.testng.annotations.Test;
+import static org.testng.Assert.assertEquals;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
 import java.util.ArrayList;
@@ -8,36 +10,37 @@ import java.util.List;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
-import junit.framework.TestCase;
-
-public abstract class JsonSerializerSpeedTest extends TestCase{
+@Test
+public abstract class JsonSerializerSpeedTest{
 	public static final int NUM_RUNS = 100;
 	protected abstract JsonSerializer createDumper();
 
+	@Test()
 	public void testShouldBeAbleToDumpComplexBeanInstancesCorrectly(){
 		JsonSerializer dumper = createDumper();
 		List<ParentBean> parents = createComplexBean();
 		String json = dumper.serialize(parents);
 		JSONArray arr = JSONArray.fromObject(json);
-		assertEquals(parents.size(), arr.size());
+		assertEquals(arr.size(), parents.size());
 		for(int i=0;i<arr.size();i++){
 			ParentBean beanParent = parents.get(i);
 			JSONObject jsonParent = arr.getJSONObject(i);
 			
-			assertEquals(beanParent.getName(), jsonParent.getString("name"));
+			assertEquals(jsonParent.getString("name"), beanParent.getName());
 
 			List<? extends TestBean> beanChildren = beanParent.getChildren();
 			JSONArray jsonChildren = jsonParent.getJSONArray("children");
-			assertEquals(beanChildren.size(), jsonChildren.size());
+			assertEquals(jsonChildren.size(), beanChildren.size());
 			
 			for(int j=0; j<jsonChildren.size();j++){
 				TestBean beanChild = beanChildren.get(j);
 				JSONObject jsonChild = jsonChildren.getJSONObject(j);
-				assertEquals(beanChild.getAge(), new Integer(jsonChild.getInt("age")));
-				assertEquals(beanChild.getName(), jsonChild.getString("name"));
+				assertEquals(new Integer(jsonChild.getInt("age")), beanChild.getAge());
+				assertEquals(jsonChild.getString("name"), beanChild.getName());
 			}
 		}
 	}
+	@Test()
 	public void testShouldBeAbleToDumpComplexBeanInstancesQuickly(){
 		List<ParentBean> parents = createComplexBean();
 
@@ -76,7 +79,7 @@ public abstract class JsonSerializerSpeedTest extends TestCase{
 		}
 		return total / (times.size()-1);
 	}
-	public void doRun(int runNumber, Object obj, List<Long> times, List<Long> mems){
+	private void doRun(int runNumber, Object obj, List<Long> times, List<Long> mems){
 		MemoryMXBean memory = ManagementFactory.getMemoryMXBean();
 		free();
 		long memstart = memory.getHeapMemoryUsage().getUsed();

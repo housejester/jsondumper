@@ -1,7 +1,9 @@
 package com.itsalleasy.json;
 
-import java.lang.management.ManagementFactory;
-import java.lang.management.MemoryMXBean;
+import org.testng.annotations.Test;
+import org.testng.annotations.BeforeMethod;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -12,130 +14,153 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import junit.framework.TestCase;
-
-public abstract class JsonSerializerTest  extends TestCase{
+@Test
+public abstract class JsonSerializerTest{
 	private JsonSerializer dumper;
+	@BeforeMethod()
 	public void setUp(){
 		dumper = createDumper();
 	}
 	protected abstract JsonSerializer createDumper();
 
+	@Test()
 	public void testShouldDumpStringsQuoted(){
 		Object obj = "some string";
 		String dump = dumper.serialize(obj);
-		assertEquals("\"some string\"", dump);
+		assertEquals(dump, "\"some string\"");
 	}
+	@Test()
 	public void testShouldDumpIntegers(){
 		Object obj = 100;
 		String dump = dumper.serialize(obj);
-		assertEquals("100", dump);
+		assertEquals(dump, "100");
 	}
+	@Test()
 	public void testShouldTruncateFloatsWithNoDecimal(){
 		Object obj = 100f;
 		String dump = dumper.serialize(obj);
-		assertEquals("100", dump);
+		assertEquals(dump, "100");
 	}
+	@Test()
 	public void testShouldFormatFloatsToTwoDecimalsByDefault(){
 		Object obj = 100.33333333f;
 		String dump = dumper.serialize(obj);
-		assertEquals("100.33", dump);
+		assertEquals(dump, "100.33");
 	}
+	@Test()
 	public void testShouldRoundUpFloats(){
 		Object obj = 100.338f;
 		String dump = dumper.serialize(obj);
-		assertEquals("100.34", dump);
+		assertEquals(dump, "100.34");
 	}
+	@Test()
 	public void testShouldRoundUpNonDecimalPartOfFloats(){
 		Object obj = 100.999f;
 		String dump = dumper.serialize(obj);
-		assertEquals("101", dump);
+		assertEquals(dump, "101");
 	}
+	@Test()
 	public void testShouldDumpBooleanTrue(){
 		Object obj = true;
 		String dump = dumper.serialize(obj);
-		assertEquals("true", dump);
+		assertEquals(dump, "true");
 	}
+	@Test()
 	public void testShouldDumpBooleanFalse(){
 		Object obj = false;
 		String dump = dumper.serialize(obj);
-		assertEquals("false", dump);
+		assertEquals(dump, "false");
 	}
+	@Test()
 	public void testShouldDumpNull(){
 		Object obj = null;
 		String dump = dumper.serialize(obj);
-		assertEquals("null", dump);
+		assertEquals(dump, "null");
 	}
+	@Test()
 	public void testShouldDumpArrayOfStrings(){
 		Object obj = new String[]{"one", "two"};
 		String dump = dumper.serialize(obj);
-		assertEquals("[\"one\",\"two\"]", dump);
+		assertEquals(dump, "[\"one\",\"two\"]");
 	}
+	@Test()
 	public void testShouldDumpEmptyArray(){
 		Object obj = new String[]{};
 		String dump = dumper.serialize(obj);
-		assertEquals("[]", dump);
+		assertEquals(dump, "[]");
 	}
+	@Test()
 	public void testShouldDumpArrayOfIntegers(){
 		Object obj = new Integer[]{1,2,3,4};
 		String dump = dumper.serialize(obj);
-		assertEquals("[1,2,3,4]", dump);
+		assertEquals(dump, "[1,2,3,4]");
 	}
+	@Test()
 	public void testShouldDumpArrayOfInts(){
  		Object obj = new int[]{1,2,3,4};
 		String dump = dumper.serialize(obj);
-		assertEquals("[1,2,3,4]", dump);
+		assertEquals(dump, "[1,2,3,4]");
 	}
+	@Test()
 	public void testShouldDumpArrayOfFloats(){
  		Object obj = new Float[]{1f,2.1f,3.1f,4.1f};
 		String dump = dumper.serialize(obj);
-		assertEquals("[1,2.1,3.1,4.1]", dump);
+		assertEquals(dump, "[1,2.1,3.1,4.1]");
 	}
+	@Test()
 	public void testShouldDumpArrayOfPrimitiveFloats(){
  		Object obj = new float[]{1f,2.1f,3.1f,4.1f};
 		String dump = dumper.serialize(obj);
-		assertEquals("[1,2.1,3.1,4.1]", dump);
+		assertEquals(dump, "[1,2.1,3.1,4.1]");
 	}
+	@Test()
 	public void testShouldDumpArrayOfBooleans(){
  		Object obj = new Boolean[]{true,true,false,true};
 		String dump = dumper.serialize(obj);
-		assertEquals("[true,true,false,true]", dump);
+		assertEquals(dump, "[true,true,false,true]");
 	}
+	@Test()
 	public void testShouldDumpArrayOfPrimitiveBooleans(){
  		Object obj = new boolean[]{true,true,false,true};
 		String dump = dumper.serialize(obj);
-		assertEquals("[true,true,false,true]", dump);
+		assertEquals(dump, "[true,true,false,true]");
 	}
+	@Test()
 	public void testShouldDumpArrayOfNulls(){
  		Object obj = new Object[]{null,null,null};
 		String dump = dumper.serialize(obj);
-		assertEquals("[null,null,null]", dump);
+		assertEquals(dump, "[null,null,null]");
 	}
+	@Test()
 	public void testShouldDumpMixedArrayOfNulls(){
  		Object obj = new Integer[]{1,null,3};
 		String dump = dumper.serialize(obj);
-		assertEquals("[1,null,3]", dump);
+		assertEquals(dump, "[1,null,3]");
 	}
+	@Test()
 	public void testShouldDumpListCollections(){
  		Object obj = Arrays.asList(new Integer[]{1,2,3});
 		String dump = dumper.serialize(obj);
-		assertEquals("[1,2,3]", dump);
+		assertEquals(dump, "[1,2,3]");
 	}
+	@Test()
 	public void testShouldDumpListOfStrings(){
  		Object obj = Arrays.asList(new String[]{"1","2","3"});
 		String dump = dumper.serialize(obj);
-		assertEquals("[\"1\",\"2\",\"3\"]", dump);
+		assertEquals(dump, "[\"1\",\"2\",\"3\"]");
 	}
+	@Test()
 	public void testShouldDumpSetCollections(){
  		Object obj = new HashSet<Object>(Arrays.asList(new Integer[]{1,2,3}));
 		String dump = dumper.serialize(obj);
 		String numbersWithCommas = dump.substring(1, dump.length()-1);
 		String[] numbers = numbersWithCommas.split(",");
 		List<String> numbersList = Arrays.asList(numbers);
-		assertTrue("no '1' in: "+dump, numbersList.contains("1"));
-		assertTrue("no '2' in: "+dump, numbersList.contains("2"));
-		assertTrue("no '3' in: "+dump, numbersList.contains("3"));
+		assertTrue(numbersList.contains("1"), "no '1' in: "+dump);
+		assertTrue(numbersList.contains("2"), "no '2' in: "+dump);
+		assertTrue(numbersList.contains("3"), "no '3' in: "+dump);
 	}
+	@Test()
 	public void testShouldBeAbleToDumpMapsAsJavascriptPrimitiveObjects(){
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("key1", "value1");
@@ -144,30 +169,32 @@ public abstract class JsonSerializerTest  extends TestCase{
 
 		Object obj = map;
 		String dump = dumper.serialize(obj);
-		assertEquals('{', dump.charAt(0));
-		assertEquals('}', dump.charAt(dump.length()-1));
+		assertEquals(dump.charAt(0), '{');
+		assertEquals(dump.charAt(dump.length()-1), '}');
 		String allKeyValues = dump.substring(1,dump.length()-1);
 		String[] keyValuePairs = allKeyValues.split(",");
 		List<String> keyValuePairList = Arrays.asList(keyValuePairs);
-		assertTrue("should have key1: "+dump, keyValuePairList.contains("\"key1\":\"value1\""));
-		assertTrue("should have key2: "+dump,keyValuePairList.contains("\"key2\":2"));
-		assertTrue("should have key3: "+dump,keyValuePairList.contains("\"key3\":true"));
+		assertTrue(keyValuePairList.contains("\"key1\":\"value1\""), "should have key1: "+dump);
+		assertTrue(keyValuePairList.contains("\"key2\":2"), "should have key2: "+dump);
+		assertTrue(keyValuePairList.contains("\"key3\":true"), "should have key3: "+dump);
 	}
+	@Test()
 	public void testShouldBeAbleToDumpSimpleBeanInstance(){
 		TestBean bean = new TestBean();
 		bean.setName("foo");
 		bean.setAge(22);
  		Object obj = bean;
 		String dump = dumper.serialize(obj);
-		assertEquals('{', dump.charAt(0));
-		assertEquals('}', dump.charAt(dump.length()-1));
+		assertEquals(dump.charAt(0), '{');
+		assertEquals(dump.charAt(dump.length()-1), '}');
 		String allKeyValues = dump.substring(1,dump.length()-1);
 		String[] keyValuePairs = allKeyValues.split(",");
 		List<String> keyValuePairList = Arrays.asList(keyValuePairs);
-		assertTrue("should have name: "+dump, keyValuePairList.contains("\"name\":\"foo\""));
-		assertTrue("should have age: "+dump,keyValuePairList.contains("\"age\":22"));
+		assertTrue(keyValuePairList.contains("\"name\":\"foo\""), "should have name: "+dump);
+		assertTrue(keyValuePairList.contains("\"age\":22"), "should have age: "+dump);
 	}
 	
+	@Test()
 	public void testShouldBeAbleToDumpCircularBeanReferenceGraphs(){
 		ParentBean parent = new ParentBean();
 		ParentBean child = new ParentBean();
@@ -175,14 +202,16 @@ public abstract class JsonSerializerTest  extends TestCase{
 		child.setChildren(Collections.singletonList(parent));
 		Object obj = parent;
 		String dump = dumper.serialize(obj);
-		assertEquals("{\"children\":[{\"children\":[{\"$ref\":\"\"}]}]}", dump);
+		assertEquals(dump, "{\"children\":[{\"children\":[{\"$ref\":\"\"}]}]}");
 	}
+	@Test()
 	public void testShouldBeAbleToDumpMultipleReferencesToSameObjectInCollections(){
 		ParentBean parent = new ParentBean("bean");
 		Object obj = new Object[]{parent, parent};
 		String dump = dumper.serialize(obj);
-		assertEquals("[{\"name\":\"bean\"},{\"$ref\":\"0\"}]", dump);
+		assertEquals(dump, "[{\"name\":\"bean\"},{\"$ref\":\"0\"}]");
 	}
+	@Test()
 	public void testShouldBeAbleToDumpDates(){
 		Calendar cal = Calendar.getInstance();
 		int year = 2000;
@@ -196,8 +225,9 @@ public abstract class JsonSerializerTest  extends TestCase{
 		long millis = date.getTime();
  		Object obj = date;
 		String dump = dumper.serialize(obj);
-		assertEquals("new Date("+millis+")", dump);
+		assertEquals(dump, "new Date("+millis+")");
 	}
+	@Test()
 	public void testShouldBeAbleToDumpCalendars(){
 		Calendar cal = Calendar.getInstance();
 		int year = 2000;
@@ -211,51 +241,59 @@ public abstract class JsonSerializerTest  extends TestCase{
 		long millis = date.getTime();
  		Object obj = cal;
 		String dump = dumper.serialize(obj);
-		assertEquals("new Date("+millis+")", dump);
+		assertEquals(dump, "new Date("+millis+")");
 	}
+	@Test()
 	public void testShouldEscapeDoubleQuotesInStringValues(){
 		Object obj = "some \"quoted string\"";
 		String dump = dumper.serialize(obj);
-		assertEquals("\"some \\\"quoted string\\\"\"", dump);
+		assertEquals(dump, "\"some \\\"quoted string\\\"\"");
 	}
+	@Test()
 	public void testShouldEscapeForwardSlashesInStrings(){
 		Object obj = "some string/with/slashes";
 		String dump = dumper.serialize(obj);
-		assertEquals("\"some string\\/with\\/slashes\"", dump);
+		assertEquals(dump, "\"some string\\/with\\/slashes\"");
 	}
+	@Test()
 	public void testShouldProduceUnicodeForNonUtf8Charset(){
 		Object obj = "\u6C34";
 		String dump = dumper.serialize(obj);
-		assertEquals("\"\\u6c34\"", dump);
+		assertEquals(dump, "\"\\u6c34\"");
 	}
+	@Test()
 	public void testShouldNotDumpNullBeanProperties(){
 		TestBean bean = new TestBean();
 		bean.setName(null);
 		bean.setAge(22);
  		Object obj = bean;
 		String dump = dumper.serialize(obj);
-		assertEquals("{\"age\":22}", dump);
+		assertEquals(dump, "{\"age\":22}");
 	}
+	@Test()
 	public void testShouldNotDumpBooleanFalseBeanProperties(){
 		TestBooleanBean bean = new TestBooleanBean("test", false);
  		Object obj = bean;
 		String dump = dumper.serialize(obj);
-		assertEquals("{\"name\":\"test\"}", dump);
+		assertEquals(dump, "{\"name\":\"test\"}");
 	}
+	@Test()
 	public void testShouldNotDumpEmptyStringBeanProperties(){
 		TestBooleanBean bean = new TestBooleanBean("", true);
  		Object obj = bean;
 		String dump = dumper.serialize(obj);
-		assertEquals("{\"value\":true}", dump);
+		assertEquals(dump, "{\"value\":true}");
 	}
+	@Test()
 	public void testShouldNotDumpNumericZeroBeanProperties(){
 		TestBean bean = new TestBean();
 		bean.setName("foo");
 		bean.setAge(0);
  		Object obj = bean;
 		String dump = dumper.serialize(obj);
-		assertEquals("{\"name\":\"foo\"}", dump);
+		assertEquals(dump, "{\"name\":\"foo\"}");
 	}
+	@Test()
 	public void testShouldNotDumpEmptyCollectionBeanProperties(){
 		ParentBean bean = new ParentBean();
 		bean.setName("parent");
@@ -263,16 +301,18 @@ public abstract class JsonSerializerTest  extends TestCase{
 
  		Object obj = bean;
 		String dump = dumper.serialize(obj);
-		assertEquals("{\"name\":\"parent\"}", dump);
+		assertEquals(dump, "{\"name\":\"parent\"}");
 	}
+	@Test()
 	@SuppressWarnings("unchecked")
 	public void testShouldNotDumpEmptyMapBeanProperties(){
 		TestBeanWithMapProperty bean = new TestBeanWithMapProperty("foo", new HashMap());
 
  		Object obj = bean;
 		String dump = dumper.serialize(obj);
-		assertEquals("{\"name\":\"foo\"}", dump);
+		assertEquals(dump, "{\"name\":\"foo\"}");
 	}
+	@Test()
 	public void testShouldNotDumpNullMapProperties(){
 		Map<String, Object> map = new HashMap<String,Object>();
 		map.put("age", 22);
@@ -280,40 +320,46 @@ public abstract class JsonSerializerTest  extends TestCase{
 
  		Object obj = map;
 		String dump = dumper.serialize(obj);
-		assertEquals("{\"age\":22}", dump);
+		assertEquals(dump, "{\"age\":22}");
 	}
+	@Test()
 	public void testShouldNotHaveCommasInNumbers(){
  		Object obj = 100000;
 		String dump = dumper.serialize(obj);
-		assertEquals("100000", dump);
+		assertEquals(dump, "100000");
 	}
+	@Test()
 	public void testShouldDumpBooleanBeanProperties(){
  		Object obj = new TestBeanWithBooleanProperty();
 		String dump = dumper.serialize(obj);
-		assertEquals("{\"active\":true}", dump);
+		assertEquals(dump, "{\"active\":true}");
 	}
+	@Test()
 	public void testShouldBeAbleToDumpCharacters(){
  		Object obj = 'c';
 		String dump = dumper.serialize(obj);
-		assertEquals("\"c\"", dump);
+		assertEquals(dump, "\"c\"");
 	}
+	@Test()
 	public void testShouldEscapeNewLineCharactersInStrings(){
  		Object obj = "line one\nline 2";
 		String dump = dumper.serialize(obj);
-		assertEquals("\"line one\\nline 2\"", dump);
+		assertEquals(dump, "\"line one\\nline 2\"");
 	}
 	enum SimpleEnum{
 		SIMPLE_VALUE
 	}
+	@Test()
 	public void testShouldDumpEnumsAsStrings(){
  		Object obj = SimpleEnum.SIMPLE_VALUE;
 		String dump = dumper.serialize(obj);
-		assertEquals("\"SIMPLE_VALUE\"", dump);
+		assertEquals(dump, "\"SIMPLE_VALUE\"");
 	}
+	@Test()
 	public void testShouldNotOutputRefsWhenObjectsAreEqualButNotSameRef(){
  		Object obj = Arrays.asList(new TestBean[]{new TestBean("Foo"), new TestBean("Foo")});
 		String dump = dumper.serialize(obj);
-		assertEquals("[{\"name\":\"Foo\"},{\"name\":\"Foo\"}]", dump);
+		assertEquals( dump, "[{\"name\":\"Foo\"},{\"name\":\"Foo\"}]");
 	}
 	/*
 	 * public void testShouldNotAllowDangerousJavascriptInStrings()

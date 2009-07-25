@@ -2,3 +2,5 @@
 bin
 .DS_Store
 target
+temp-testng-customsuite.xml
+test-output
