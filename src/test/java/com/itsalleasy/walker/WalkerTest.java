@@ -1,14 +1,19 @@
 package com.itsalleasy.walker;
 
+import org.testng.annotations.Test;
+import org.testng.annotations.BeforeMethod;
+import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertSame;
+import static org.testng.Assert.assertEquals;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
-import junit.framework.TestCase;
-
-public class WalkerTest extends TestCase{
+@Test
+public class WalkerTest{
 	private List<String> beanProperties;
 	private List<Object> visited;
 	private List<Object> arrayStarts;
@@ -17,6 +22,7 @@ public class WalkerTest extends TestCase{
 	private HashMap<Integer,Object> arrayItems;
 	private Walker walker;
 	private WalkerVisitor visitor; 
+	@BeforeMethod()
 	public void setUp(){
 		beanProperties = new ArrayList<String>();
 		visited = new ArrayList<Object>();
@@ -60,109 +66,132 @@ public class WalkerTest extends TestCase{
 
 		walker = new Walker(PropertyFilters.FILTER_NONE, null, null);
 	}
+	@Test()
 	public void testShouldWalkPrimitiveIntsWithVisitToPrimitive(){
 		walker.walk(1, visitor);
 		assertTrue(visited.contains(1));
 	}
+	@Test()
 	public void testShouldWalkPrimitiveStringsWithVisitToPrimitive(){
 		walker.walk("foo", visitor);
 		assertTrue(visited.contains("foo"));
 	}
+	@Test()
 	public void testShouldWalkPrimitiveIntsWithBooleansToPrimitive(){
 		walker.walk(true, visitor);
 		assertTrue(visited.contains(true));
 	}
+	@Test()
 	public void testShouldWalkNullsWithVisitToNull(){
 		walker.walk(null, visitor);
 		assertTrue(visited.contains(null));
 	}
+	@Test()
 	public void testShouldVisitActualArrayWhenWalkingArray(){
 		String[] arr = new String[]{"foo", "bar"};
 		walker.walk(arr, visitor);
 		assertTrue(visited.contains(arr));
 	}
+	@Test()
 	public void testShouldWalkArraysWithVisitToEachElemInArray(){
 		walker.walk(new String[]{"foo", "bar"}, visitor);
 		assertTrue(visited.contains("foo"));
 		assertTrue(visited.contains("bar"));
 	}
+	@Test()
 	public void testShouldWalkListsWithVisitToEachElemInList(){
 		walker.walk(Arrays.asList(new String[]{"foo", "bar"}), visitor);
 		assertTrue(visited.contains("foo"));
 		assertTrue(visited.contains("bar"));
 	}
+	@Test()
 	public void testShouldWalkSetsWithVisitToEachElemInSet(){
 		walker.walk(new HashSet<String>(Arrays.asList(new String[]{"foo", "bar"})), visitor);
 		assertTrue(visited.contains("foo"));
 		assertTrue(visited.contains("bar"));
 	}
+	@Test()
 	public void testShouldCallArrayVisitMethodsForArrays(){
 		String[] arr = new String[]{"foo", "bar"};
 		walker.walk(arr, visitor);
-		assertEquals(1, arrayStarts.size());
-		assertEquals(1, arrayEnds.size());
+		assertEquals(arrayStarts.size(), 1);
+		assertEquals(arrayEnds.size(), 1);
 	}
+	@Test()
 	public void testShouldCallArrayVisitMethodsForLists(){
 		List list = Arrays.asList(new String[]{"foo", "bar"});
 		walker.walk(list, visitor);
 		assertTrue(arrayStarts.contains(list));
 		assertTrue(arrayEnds.contains(list));
 	}
+	@Test()
 	public void testShouldVisitNestedArrays(){
 		walker.walk(new Object[]{new String[]{"foo", "bar"}}, visitor);
 		assertTrue(visited.contains("foo"));
 		assertTrue(visited.contains("bar"));
 	}
+	@Test()
 	public void testShouldCallRevisitWhenArrayReferencedMultipleTimes(){
 		String[] arr = new String[]{"foo", "bar"};
 		walker.walk(new Object[]{arr, arr}, visitor);
 		assertTrue(revisited.contains(arr));
 	}
+	@Test()
 	public void testShouldCallArrayItemForEachElemInArray(){
 		walker.walk(new String[]{"foo", "bar"}, visitor);
 		assertTrue(arrayItems.containsValue("foo"));
 		assertTrue(arrayItems.containsValue("bar"));
 	}
+	@Test()
 	public void testShouldCallArrayItemWithCorrectIndexForEachElemInArray(){
 		walker.walk(new String[]{"foo", "bar"}, visitor);
-		assertSame("foo", arrayItems.get(0));
-		assertSame("bar", arrayItems.get(1));
+		assertSame(arrayItems.get(0), "foo");
+		assertSame(arrayItems.get(1), "bar");
 	}
+	@Test()
 	public void testShouldNotWalkAlmostBooleanBeanProperties(){
 		walker.walk(new ClassWithBooleanAccessorLikeMethod(), visitor);
 		assertTrue(beanProperties.isEmpty());
 	}
+	@Test()
 	public void testShouldNotWalkAlmostBeanProperties(){
 		walker.walk(new ClassWithAccessorLikeMethod(), visitor);
 		assertTrue(beanProperties.isEmpty());
 	}
 	
+	@Test()
 	public void testShouldNotWalkAccessorLikeMethodsThatTakeArguments(){
 		walker.walk(new ClassWithAccessorLikeMethodWithParam(), visitor);
 		assertTrue(beanProperties.isEmpty());
 	}
+	@Test()
 	public void testShouldNotWalkBooleanAccessorLikeMethodsThatTakeArguments(){
 		walker.walk(new ClassWithBooleanAccessorLikeMethodWithParam(), visitor);
 		assertTrue(beanProperties.isEmpty());
 	}
+	@Test()
 	public void testShouldNotWalkAccessorLikeMethodsThatReturnVoid(){
 		walker.walk(new ClassWithAccessorLikeMethodWithVoidReturn(), visitor);
 		assertTrue(beanProperties.isEmpty());
 	}
+	@Test()
 	public void testShouldNotWalkBooleanAccessorLikeMethodsThatReturnVoid(){
 		walker.walk(new ClassWithBooleanAccessorLikeMethodWithVoidReturn(), visitor);
 		assertTrue(beanProperties.isEmpty());
 	}
+	@Test()
 	public void testShouldNotWalkAccessorLikeMethodsThatArePrivate(){
 		walker.walk(new ClassWithPrivateAccessorLikeMethod(), visitor);
 		assertTrue(beanProperties.isEmpty());
 	}
 
+	@Test()
 	public void testShouldNotWalkAccessorMethodsWithClassReturnType(){
 		walker.walk(new ClassWithAccessorOfTypeClass(), visitor);
 		assertTrue(beanProperties.isEmpty());
 	}
 
+	@Test()
 	public void testShouldWalkValidAccessorMethodsAsBeanProperties(){
 		walker.walk(new ClassWithSingleStringBeanPropertyAccessor(), visitor);
 		assertFalse(beanProperties.isEmpty());
