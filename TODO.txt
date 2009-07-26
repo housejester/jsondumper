@@ -1,0 +1,2 @@
+- Make escaping '/' in strings optional and probably off by default.  In reading around a bit, it seems that crockford has said it is optional.
+
