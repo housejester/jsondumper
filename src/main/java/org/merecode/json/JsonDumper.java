@@ -13,8 +13,7 @@ import org.merecode.walker.TrackingPolicies;
 import org.merecode.walker.TrackingPolicy;
 import org.merecode.walker.Walker;
 
-
-public class JsonDumper implements JsonSerializer {
+public class JsonDumper extends AbstractJsonSerializer {
 	public static final AppenderRegistry DEFAULT_APPENDERS = new NullCheckRegistry(new CachingAppenderRegistry(new JsonWalkerAppenderRegistry()));
 	public static final PropertyFilter DEFAULT_FILTER = PropertyFilters.IS_DEFAULT_OR_EMPTY;
 	public static final TrackingPolicy DEFAULT_TRACKING_POLICY = TrackingPolicies.TRACK_OBJECTS_AND_PATHS;
@@ -34,15 +33,6 @@ public class JsonDumper implements JsonSerializer {
 				trackingPolicy == null ? DEFAULT_TRACKING_POLICY : trackingPolicy,
 				walkerFactory == null ? DEFAULT_WALKER_FACTORY : walkerFactory
 		);
-	}
-
-	public String serialize(Object obj) {
-		Writer writer = new StringBuilderWriter();
-		try {
-			serialize(obj, writer);
-		} catch (IOException e) {
-		}
-		return writer.toString();
 	}
 
 	public void serialize(Object obj, Writer writer) throws IOException {
