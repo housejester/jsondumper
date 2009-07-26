@@ -11,14 +11,6 @@
 	<url>http://merecode.org/code/walker</url>
 	<dependencies>
 		<dependency>
-			<groupId>net.sf.json-lib</groupId>
-			<artifactId>json-lib</artifactId>
-			<version>2.3</version>
-			<classifier>jdk15</classifier>
-			<scope>test</scope>
-			<optional>false</optional>
-		</dependency>
-		<dependency>
 			<groupId>org.testng</groupId>
 			<artifactId>testng</artifactId>
 			<version>5.9</version>
@@ -29,6 +21,20 @@
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-all</artifactId>
 			<version>1.8.0-rc2</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.json-lib</groupId>
+			<artifactId>json-lib</artifactId>
+			<version>2.3</version>
+			<classifier>jdk15</classifier>
+			<scope>test</scope>
+			<optional>false</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<version>1.2.0</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
