@@ -1,5 +1,6 @@
 package org.merecode.walker;
 
+import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Map;
@@ -41,6 +42,11 @@ public class PropertyFilters {
 		@SuppressWarnings("unchecked")
 		public boolean matches(Object value, String name) {
 			return (value instanceof Map) && ((Map)value).isEmpty();
+		}
+	};
+	public static final PropertyFilter NOT_SERIALIZABLE = new PropertyFilter(){
+		public boolean matches(Object value, String name) {
+			return value != null && !(value instanceof Serializable);
 		}
 	};
 	public static final PropertyFilter chain(final PropertyFilter ... filters){
