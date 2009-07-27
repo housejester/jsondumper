@@ -12,8 +12,6 @@ import org.merecode.json.Appender;
 
 public class DateAppender implements Appender {
 	public void append(Object obj, Writer writer) throws IOException {
-		writer.append("new Date(");
 		writer.append(""+((Date)obj).getTime());
-		writer.append(")");
 	}
 }

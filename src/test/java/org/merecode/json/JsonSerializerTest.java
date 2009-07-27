@@ -228,10 +228,10 @@ public abstract class JsonSerializerTest{
 		long millis = date.getTime();
  		Object obj = date;
 		String dump = dumper.serialize(obj);
-		assertEquals(dump, "new Date("+millis+")");
+		assertEquals(dump, ""+millis);
 	}
 	@Test()
-	public void testShouldBeAbleToDumpCalendars(){
+	public void testShouldBeAbleToDumpCalendarsAsTimestamp(){
 		Calendar cal = Calendar.getInstance();
 		int year = 2000;
 		int month = 8;
@@ -244,7 +244,7 @@ public abstract class JsonSerializerTest{
 		long millis = date.getTime();
  		Object obj = cal;
 		String dump = dumper.serialize(obj);
-		assertEquals(dump, "new Date("+millis+")");
+		assertEquals(dump, ""+millis);
 	}
 	@Test()
 	public void testShouldEscapeDoubleQuotesInStringValues(){
