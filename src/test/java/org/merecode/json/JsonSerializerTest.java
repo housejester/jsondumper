@@ -253,13 +253,20 @@ public abstract class JsonSerializerTest{
 		assertEquals(dump, "\"some \\\"quoted string\\\"\"");
 	}
 	@Test()
-	public void testShouldEscapeForwardSlashesInStrings(){
+	public void testShouldNotEscapeForwardSlashesInStrings(){
+		Object obj = "some string/with/slashes";
+		String dump = dumper.serialize(obj);
+		assertEquals(dump, "\"some string/with/slashes\"");
+	}
+	@Test()
+	public void testShouldEscapeForwardSlashesInStringsIfConfiguredTo(){
+		dumper.setEscapeForwardSlashes(true);
 		Object obj = "some string/with/slashes";
 		String dump = dumper.serialize(obj);
 		assertEquals(dump, "\"some string\\/with\\/slashes\"");
 	}
 	@Test()
-	public void testShouldProduceUnicodeForNonUtf8Charset(){
+	public void testShouldProduceUnicodeEscapeForNonAsciiRange(){
 		Object obj = "\u6C34";
 		String dump = dumper.serialize(obj);
 		assertEquals(dump, "\"\\u6c34\"");

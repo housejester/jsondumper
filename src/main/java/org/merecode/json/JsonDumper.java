@@ -3,6 +3,7 @@ package org.merecode.json;
 import java.io.IOException;
 import java.io.Writer;
 
+import org.merecode.json.appenders.StringAppender;
 import org.merecode.json.registries.CachingAppenderRegistry;
 import org.merecode.json.registries.NullCheckRegistry;
 import org.merecode.walker.BasicNodeWalkerFactory;
@@ -40,6 +41,13 @@ public class JsonDumper extends AbstractJsonSerializer {
 			walker.walk(obj, new JsonWalkerVisitor(writer, appenders));
 		}catch(JsonIOException e){
 			throw e.getIOException();
+		}
+	}
+
+	public void setEscapeForwardSlashes(boolean escapeForwardSlashes) {
+		Appender appender = appenders.lookupAppenderFor("foo");
+		if(appender instanceof StringAppender){
+			((StringAppender)appender).setEscapeForwardSlash(escapeForwardSlashes);
 		}
 	}
 }

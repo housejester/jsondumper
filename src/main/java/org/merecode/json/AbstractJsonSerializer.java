@@ -12,4 +12,7 @@ public abstract class AbstractJsonSerializer implements JsonSerializer{
 		}
 		return writer.toString();
 	}
+
+	public void setEscapeForwardSlashes(boolean escapeForwardSlashes) {
+	}
 }
