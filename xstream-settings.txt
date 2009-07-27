@@ -1,0 +1,24 @@
+{
+	renderInsignificantZeroDecimals : true,
+	nullStringProperty : "empty-string", /* null, skip */
+	dateStrategy : "iso", /* runtime timezone */
+	nullMapValue : "empty-map", /* skip */
+	failOnInvalidRoot : true,
+	skipEmptyCollections : false,
+	cycleStrategy : "ref-relative", 
+	escapeForwardSlashes : false,
+	skipZeroes : false,
+	maxDecimalPlaces : 5, /* but 6 when round should be down */
+	roundDecimalsTo : "strange-jackson", /* ceil, floor, nearest...round down seems odd, .3333333 gets .333336 (6 spots and .6 somehow) not .33333 (5 spots like round up gets) */
+	calendarStrategy : "bean", /* time( as timestamp)/timezone only */
+	skipFalse : false,
+	escapeNonAsciiRange : false,
+	skipEmptyMaps : false,
+	skipEmptyStrings : false,
+	requirePublicClass : false,
+	nullCollectionEntry : "empty-map",
+	nullStrategy : "empty-map"
+}
+/* 
+Seems to treat maps as lists of k,v pairs sometimes 
+*/

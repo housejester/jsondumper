@@ -1,0 +1,19 @@
+{
+	renderInsignificantZeroDecimals : false,
+	nullStringProperty : "empty-string", /* null, skip */
+	dateStrategy : "map", /* iso, timestamp */
+	nullMapValue : "null", /* skip */
+	failOnInvalidRoot : true,
+	skipEmptyCollections : false,
+	cycleStrategy : "fail", /* reference, skip */
+	escapeForwardSlashes : false,
+	skipZeroes : false,
+	maxDecimalPlaces : 6,
+	roundDecimalsTo : "ceil", /* floor, nearest */
+	calendarStrategy : "bean", /* date */
+	skipFalse : false,
+	escapeNonAsciiRange : false,
+	skipEmptyMaps : false,
+        skipEmptyStrings : false
+	requirePublicClass : true
+}

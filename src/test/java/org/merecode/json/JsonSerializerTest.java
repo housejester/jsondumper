@@ -46,19 +46,19 @@ public abstract class JsonSerializerTest{
 	}
 	@Test()
 	public void testShouldFormatFloatsToTwoDecimalsByDefault(){
-		Object obj = 100.33333333f;
+		Object obj = 100.333333333333333333333F;
 		String dump = dumper.serialize(obj);
 		assertEquals(dump, "100.33");
 	}
 	@Test()
 	public void testShouldRoundUpFloats(){
-		Object obj = 100.338f;
+		Object obj = 100.336666666666f;
 		String dump = dumper.serialize(obj);
 		assertEquals(dump, "100.34");
 	}
 	@Test()
 	public void testShouldRoundUpNonDecimalPartOfFloats(){
-		Object obj = 100.999f;
+		Object obj = 100.9999999999f;
 		String dump = dumper.serialize(obj);
 		assertEquals(dump, "101");
 	}
@@ -187,7 +187,7 @@ public abstract class JsonSerializerTest{
 		bean.setName("foo");
 		bean.setAge(22);
  		Object obj = bean;
-		String dump = dumper.serialize(obj);
+		String dump = dumper.serialize(obj).replaceAll(" ", "");
 		assertEquals(dump.charAt(0), '{');
 		assertEquals(dump.charAt(dump.length()-1), '}');
 		String allKeyValues = dump.substring(1,dump.length()-1);
@@ -277,7 +277,7 @@ public abstract class JsonSerializerTest{
 		bean.setName(null);
 		bean.setAge(22);
  		Object obj = bean;
-		String dump = dumper.serialize(obj);
+		String dump = dumper.serialize(obj).replaceAll(" ", "");
 		assertEquals(dump, "{\"age\":22}");
 	}
 	@Test()
@@ -370,45 +370,5 @@ public abstract class JsonSerializerTest{
  		Object obj = Arrays.asList(new TestBean[]{new TestBean("Foo"), new TestBean("Foo")});
 		String dump = dumper.serialize(obj);
 		assertEquals( dump, "[{\"name\":\"Foo\"},{\"name\":\"Foo\"}]");
-	}
-	/*
-	 * public void testShouldNotAllowDangerousJavascriptInStrings()
-	 */
-	class TestBeanWithBooleanProperty{
-		public boolean isActive(){
-			return true;
-		}
-	}
-	class TestBooleanBean{
-		private String name;
-		private boolean value;
-		public TestBooleanBean(String name, boolean value){
-			this.name = name;
-			this.value = value;
-		}
-		public String getName() {
-			return name;
-		}
-		public boolean isValue() {
-			return value;
-		}
-	}
-	class TestBeanWithMapProperty{
-		private String name;
-		@SuppressWarnings("unchecked")
-		private Map map;
-		@SuppressWarnings("unchecked")
-		public TestBeanWithMapProperty(String name, Map map){
-			this.name = name;
-			this.map = map;
-		}
-		public String getName() {
-			return name;
-		}
-		@SuppressWarnings("unchecked")
-		public Map getMap() {
-			return map;
-		}
-		
 	}
 }
