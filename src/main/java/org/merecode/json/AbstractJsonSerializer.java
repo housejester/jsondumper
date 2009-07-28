@@ -15,4 +15,8 @@ public abstract class AbstractJsonSerializer implements JsonSerializer{
 
 	public void setEscapeForwardSlashes(boolean escapeForwardSlashes) {
 	}
+
+	public void setEscapeNonAsciiRange(boolean escapeNonAsciiRange) {
+	}
+	
 }

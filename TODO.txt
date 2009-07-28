@@ -5,5 +5,4 @@
 - Interesting idea from XStream:  render "Class" properties as "@class" : "classname here"
 - Add support for pretty/formatted output
 - Make filtering 0's optional and not the default
-- Make unicode-escaping non-control, non-ascii-range characters optional (and not the default?
 - Move cycle detection setting up to the interface to be configurable.  Will probably have a config object (bleh).

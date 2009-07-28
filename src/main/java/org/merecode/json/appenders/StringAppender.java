@@ -11,15 +11,15 @@ import org.merecode.json.Appender;
 
 public class StringAppender implements Appender {
 	private boolean escapeForwardSlash;
+	private boolean escapeNonAsciiRange;
 	public StringAppender(){
-		this(false);
-	}
-	public StringAppender(boolean escapeForwardSlash){
-		this.escapeForwardSlash = escapeForwardSlash;
 	}
 	public void setEscapeForwardSlash(boolean escape){
 		escapeForwardSlash = escape;
 	}
+	public void setEscapeNonAsciiRange(boolean escapeNonAsciiRange) {
+		this.escapeNonAsciiRange = escapeNonAsciiRange;
+	}   
 	public void append(Object obj, Writer writer) throws IOException {
 		writer.append('"');
 		this.escape(obj.toString(), writer);
@@ -57,7 +57,7 @@ public class StringAppender implements Appender {
                 writer.append("\\t");
                 break;
             default:
-                if (c < '\u0020' || c > '\u007F'){
+                if (escapeNonAsciiRange && (c < '\u0020' || c > '\u007F')){
                 	writer.append("\\u");
                 	String t = Integer.toHexString(c);
                 	int numZeroesNeeded = 4 - t.length();
@@ -70,5 +70,5 @@ public class StringAppender implements Appender {
                 }
             }
         }
-    }   
+    }
 }

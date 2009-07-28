@@ -266,10 +266,17 @@ public abstract class JsonSerializerTest{
 		assertEquals(dump, "\"some string\\/with\\/slashes\"");
 	}
 	@Test()
-	public void testShouldProduceUnicodeEscapeForNonAsciiRange(){
+	public void testShouldUnicodeEscapeNonAsciiRangeIfConfiguredTo(){
+		dumper.setEscapeNonAsciiRange(true);
 		Object obj = "\u6C34";
 		String dump = dumper.serialize(obj);
 		assertEquals(dump, "\"\\u6c34\"");
+	}
+	@Test()
+	public void testShouldSupportNonAsciiChars(){
+		Object obj = "\u6C34";
+		String dump = dumper.serialize(obj);
+		assertEquals(dump, "\"\u6c34\"");
 	}
 	@Test()
 	public void testShouldNotDumpNullBeanProperties(){

@@ -7,4 +7,5 @@ public interface JsonSerializer {
 	String serialize(Object obj);
 	void serialize(Object obj, Writer writer) throws IOException;
 	void setEscapeForwardSlashes(boolean escapeForwardSlashes);
+	void setEscapeNonAsciiRange(boolean escapeNonAsciiRange);
 }

@@ -50,4 +50,11 @@ public class JsonDumper extends AbstractJsonSerializer {
 			((StringAppender)appender).setEscapeForwardSlash(escapeForwardSlashes);
 		}
 	}
+	
+	public void setEscapeNonAsciiRange(boolean escapeNonAsciiRange){
+		Appender appender = appenders.lookupAppenderFor("foo");
+		if(appender instanceof StringAppender){
+			((StringAppender)appender).setEscapeNonAsciiRange(escapeNonAsciiRange);
+		}
+	}
 }
