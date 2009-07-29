@@ -8,4 +8,5 @@ public interface JsonSerializer {
 	void serialize(Object obj, Writer writer) throws IOException;
 	void setEscapeForwardSlashes(boolean escapeForwardSlashes);
 	void setEscapeNonAsciiRange(boolean escapeNonAsciiRange);
+	void setMaxDecimalDigits(int i);
 }

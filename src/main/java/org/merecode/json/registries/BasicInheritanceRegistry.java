@@ -23,7 +23,7 @@ public class BasicInheritanceRegistry implements AppenderRegistry{
 	public Appender lookupAppenderFor(Object obj) {
 		Class<?> objClass = obj.getClass();
 
-		Appender appender = appenders.get(objClass);
+		Appender appender = getRegisteredAppender(objClass);
 		if(appender != null){
 			return appender;
 		}
@@ -36,4 +36,7 @@ public class BasicInheritanceRegistry implements AppenderRegistry{
 		return defaultAppender;
 	}
 
+	public Appender getRegisteredAppender(Class<?> clazz) {
+		return appenders.get(clazz);
+	}
 }

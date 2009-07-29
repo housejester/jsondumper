@@ -11,10 +11,10 @@ import java.text.DecimalFormat;
 import org.merecode.json.Appender;
 
 
-public class NumberAppender implements Appender {
+public class PreciseNumberAppender implements Appender {
     private DecimalFormat formatter;
     
-    public NumberAppender(){
+    public PreciseNumberAppender(){
     	formatter = new DecimalFormat();
 		formatter.setMinimumFractionDigits(0);
 		formatter.setMaximumFractionDigits(2);
@@ -26,7 +26,11 @@ public class NumberAppender implements Appender {
 		if(num instanceof Float || num instanceof Double || num instanceof BigDecimal){
 			writer.append(formatter.format(num));
 		}else{
-			writer.append(String.valueOf(num));
+			writer.append(String.valueOf(obj));
 		}
+	}
+
+	public void setMaxDecimalDigits(int maxDigits) {
+		formatter.setMaximumFractionDigits(maxDigits);
 	}
 }

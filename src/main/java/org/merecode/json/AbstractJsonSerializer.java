@@ -18,5 +18,7 @@ public abstract class AbstractJsonSerializer implements JsonSerializer{
 
 	public void setEscapeNonAsciiRange(boolean escapeNonAsciiRange) {
 	}
-	
+
+	public void setMaxDecimalDigits(int i) {
+	}
 }

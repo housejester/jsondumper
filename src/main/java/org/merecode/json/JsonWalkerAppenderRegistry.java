@@ -7,7 +7,7 @@ import org.merecode.json.appenders.BooleanAppender;
 import org.merecode.json.appenders.CalendarAppender;
 import org.merecode.json.appenders.DateAppender;
 import org.merecode.json.appenders.IgnoringAppender;
-import org.merecode.json.appenders.NumberAppender;
+import org.merecode.json.appenders.RawNumberAppender;
 import org.merecode.json.appenders.StringAppender;
 import org.merecode.json.registries.BasicInheritanceRegistry;
 
@@ -20,7 +20,7 @@ public class JsonWalkerAppenderRegistry extends BasicInheritanceRegistry{
 
 	private void registerBasicAppenders() {
 		register(String.class, new StringAppender());
-		register(Number.class, new NumberAppender());
+		register(Number.class, new RawNumberAppender());
 		register(Boolean.class, new BooleanAppender());
 		register(Calendar.class, new CalendarAppender());
 		register(Date.class, new DateAppender());

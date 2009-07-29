@@ -7,6 +7,8 @@ import org.testng.annotations.BeforeMethod;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
+
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -32,36 +34,65 @@ public abstract class JsonSerializerTest{
 		String dump = dumper.serialize(obj);
 		assertEquals(dump, "\"some string\"");
 	}
+	
 	@Test()
 	public void testShouldDumpIntegers(){
 		Object obj = 100;
 		String dump = dumper.serialize(obj);
 		assertEquals(dump, "100");
 	}
+	
 	@Test()
-	public void testShouldTruncateFloatsWithNoDecimal(){
+	public void testShouldDumpFloats(){
 		Object obj = 100f;
 		String dump = dumper.serialize(obj);
-		assertEquals(dump, "100");
+		assertEquals(dump, "100.0");
 	}
+
 	@Test()
-	public void testShouldFormatFloatsToTwoDecimalsByDefault(){
-		Object obj = 100.333333333333333333333F;
+	public void testShouldRenderBigDecimalsAsDecimals(){
+		Object obj = new BigDecimal("100.33");
 		String dump = dumper.serialize(obj);
 		assertEquals(dump, "100.33");
 	}
+
 	@Test()
-	public void testShouldRoundUpFloats(){
-		Object obj = 100.336666666666f;
+	public void testShouldRenderBigDecimalWithManyDecimalDigits(){
+		String decimalText = "100.0123456789012345678901234567890123456789";
+		Object obj = new BigDecimal(decimalText);
 		String dump = dumper.serialize(obj);
+		assertEquals(dump, decimalText);
+	}
+
+	@Test()
+	public void testShouldNotLimitDecimalPrecisionForFloats(){
+		float num = 100.336666666666f;
+		String dump = dumper.serialize(num);
+		assertEquals(dump, String.valueOf(num));
+	}
+
+	@Test()
+	public void testShouldLimitDecimalPrecisionForFloatsWhenConfiguredTo(){
+		dumper.setMaxDecimalDigits(2);
+		float num = 100.336666666666f;
+		String dump = dumper.serialize(num);
 		assertEquals(dump, "100.34");
 	}
+
+	@Test()
+	public void testShouldNotLimitDecimalPrecisionForDoubles(){
+		double num = 100.336666666666777888999d;
+		String dump = dumper.serialize(num);
+		assertEquals(dump, String.valueOf(num));
+	}
+
 	@Test()
 	public void testShouldRoundUpNonDecimalPartOfFloats(){
 		Object obj = 100.9999999999f;
 		String dump = dumper.serialize(obj);
-		assertEquals(dump, "101");
+		assertEquals(dump, "101.0");
 	}
+
 	@Test()
 	public void testShouldDumpBooleanTrue(){
 		Object obj = true;
@@ -108,13 +139,13 @@ public abstract class JsonSerializerTest{
 	public void testShouldDumpArrayOfFloats(){
  		Object obj = new Float[]{1f,2.1f,3.1f,4.1f};
 		String dump = dumper.serialize(obj);
-		assertEquals(dump, "[1,2.1,3.1,4.1]");
+		assertEquals(dump, "[1.0,2.1,3.1,4.1]");
 	}
 	@Test()
 	public void testShouldDumpArrayOfPrimitiveFloats(){
  		Object obj = new float[]{1f,2.1f,3.1f,4.1f};
 		String dump = dumper.serialize(obj);
-		assertEquals(dump, "[1,2.1,3.1,4.1]");
+		assertEquals(dump, "[1.0,2.1,3.1,4.1]");
 	}
 	@Test()
 	public void testShouldDumpArrayOfBooleans(){

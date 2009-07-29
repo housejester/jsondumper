@@ -5,4 +5,7 @@
 - Interesting idea from XStream:  render "Class" properties as "@class" : "classname here"
 - Add support for pretty/formatted output
 - Make filtering 0's optional and not the default
-- Move cycle detection setting up to the interface to be configurable.  Will probably have a config object (bleh).
+- Move cycle detection setting up to the interface to be configurable.  Will probably have a config object (bleh)
+- Issue warning if serializing Float or Double (recommend BigDecimal)?
+- Consider making the jsonappenderregistry respect order so that Float,Double,BigDecimal can be listed before Number and get their own
+ 	appender (and the if check in the number appender can be removed).
