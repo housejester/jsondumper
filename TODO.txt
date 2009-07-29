@@ -1,6 +1,4 @@
 - Fix date handling.  Should support timestamp and ISO string.  Also support net.sf.json style dates as k/v pairs.
-- Make decimal precision pluggable.
-- Figure out if whole-number decimals should output the '.0' (do not currently)
 - Look into moving some of the filtering into the actual BeanNameValuePairs so that excluded props get filtered earlier.
 - Interesting idea from XStream:  render "Class" properties as "@class" : "classname here"
 - Add support for pretty/formatted output

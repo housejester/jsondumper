@@ -80,6 +80,39 @@ public abstract class JsonSerializerTest{
 	}
 
 	@Test()
+	public void testShouldNotRenderZeroDecimalValueWhenMinDecimalsIsZero(){
+		dumper.setMinDecimalDigits(0);
+		Object obj = 100f;
+		String dump = dumper.serialize(obj);
+		assertEquals(dump, "100");
+	}
+
+	@Test()
+	public void testSettingMinShouldNotAffectDefaultMaxDecimalDigits(){
+		Object obj = 33.012345678901234567890f;
+		String beforeValue = dumper.serialize(obj);
+		dumper.setMinDecimalDigits(2);
+		assertEquals(dumper.serialize(obj), beforeValue);
+	}
+
+	@Test()
+	public void testSettingMaxShouldNotAffectDefaultMinDecimalDigits(){
+		Object obj = 33f;
+		String beforeValue = dumper.serialize(obj);
+		dumper.setMaxDecimalDigits(10);
+		assertEquals(dumper.serialize(obj), beforeValue);
+	}
+
+	@Test()
+	public void testShouldRenderCorrectDecimalsWhenMinDecimalsSet(){
+		dumper.setMinDecimalDigits(4);
+		Object obj = 100f;
+		String dump = dumper.serialize(obj);
+		assertEquals(dump, "100.0000");
+	}
+
+
+	@Test()
 	public void testShouldNotLimitDecimalPrecisionForDoubles(){
 		double num = 100.336666666666777888999d;
 		String dump = dumper.serialize(num);

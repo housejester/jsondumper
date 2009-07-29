@@ -16,21 +16,26 @@ public class PreciseNumberAppender implements Appender {
     
     public PreciseNumberAppender(){
     	formatter = new DecimalFormat();
-		formatter.setMinimumFractionDigits(0);
-		formatter.setMaximumFractionDigits(2);
+		formatter.setMinimumFractionDigits(1);
 		formatter.setGroupingUsed(false);
    	};
 
-   	public void append(Object obj, Writer writer) throws IOException {
+   	public PreciseNumberAppender(int minDecimalDigits, int maxDecimalDigits) {
+   		this();
+   		if(minDecimalDigits >= 0){
+   			formatter.setMinimumFractionDigits(minDecimalDigits);
+   		}
+   		if(maxDecimalDigits >= 0){
+   			formatter.setMaximumFractionDigits(maxDecimalDigits);
+   		}
+	}
+
+	public void append(Object obj, Writer writer) throws IOException {
 		Number num = (Number)obj;
 		if(num instanceof Float || num instanceof Double || num instanceof BigDecimal){
 			writer.append(formatter.format(num));
 		}else{
 			writer.append(String.valueOf(obj));
 		}
-	}
-
-	public void setMaxDecimalDigits(int maxDigits) {
-		formatter.setMaximumFractionDigits(maxDigits);
 	}
 }

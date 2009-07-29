@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.Writer;
 
 import org.merecode.json.appenders.PreciseNumberAppender;
+import org.merecode.json.appenders.RawNumberAppender;
 import org.merecode.json.appenders.StringAppender;
 import org.merecode.json.registries.CachingAppenderRegistry;
 import org.merecode.json.registries.CombinedAppenderRegistry;
@@ -25,6 +26,8 @@ public class JsonDumper extends AbstractJsonSerializer {
 	private AppenderRegistry appenders;
 	private AppenderRegistry customAppenders;
 	private JsonWalkerAppenderRegistry baseAppenders;
+	private int minDecimalDigits = -1;
+	private int maxDecimalDigits = -1;
 	
 	public JsonDumper(){
 		this(null, null, null, null);
@@ -72,9 +75,25 @@ public class JsonDumper extends AbstractJsonSerializer {
 	}
 
 	public void setMaxDecimalDigits(int maxDigits) {
-		PreciseNumberAppender numberAppender = new PreciseNumberAppender();
-		numberAppender.setMaxDecimalDigits(maxDigits);
-		baseAppenders.register(Number.class, numberAppender);
+		this.maxDecimalDigits = maxDigits;
+		resetNumberAppender();
+	}
+
+	private void resetNumberAppender() {
+		Appender appender = null;
+		if(maxDecimalDigits == -1 && minDecimalDigits == -1){
+			appender = new RawNumberAppender();
+		}else{
+			appender = new PreciseNumberAppender(minDecimalDigits, maxDecimalDigits);
+		}
+		baseAppenders.register(Number.class, appender);
 		combineAppenders();
 	}
+
+	public void setMinDecimalDigits(int minDigits) {
+		this.minDecimalDigits = minDigits;
+		resetNumberAppender();
+	}
+	
+	
 }

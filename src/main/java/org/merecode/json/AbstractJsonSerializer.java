@@ -21,4 +21,8 @@ public abstract class AbstractJsonSerializer implements JsonSerializer{
 
 	public void setMaxDecimalDigits(int i) {
 	}
+
+	public void setMinDecimalDigits(int minDigits) {
+	}
+	
 }
