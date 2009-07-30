@@ -352,6 +352,17 @@ public abstract class JsonSerializerTest{
 		assertEquals(dump, "{\"age\":22}");
 	}
 	@Test()
+	public void testShouldDumpNullBeanPropertiesWhenConfiguredTo(){
+		dumper.setSkipNulls(false);
+		TestBean bean = new TestBean();
+		bean.setName(null);
+		bean.setAge(22);
+ 		Object obj = bean;
+		String dump = dumper.serialize(obj).replaceAll(" ", "");
+		System.out.println(dump);
+		assertTrue(dump.contains("null"));
+	}
+	@Test()
 	public void testShouldNotDumpBooleanFalseBeanProperties(){
 		TestBooleanBean bean = new TestBooleanBean("test", false);
  		Object obj = bean;
@@ -376,6 +387,7 @@ public abstract class JsonSerializerTest{
 	}
 	@Test()
 	public void testShouldNotDumpEmptyCollectionBeanProperties(){
+		dumper.setSkipEmptyCollections(true);
 		ParentBean bean = new ParentBean();
 		bean.setName("parent");
 		bean.setChildren(new ArrayList<TestBean>());
@@ -383,6 +395,17 @@ public abstract class JsonSerializerTest{
  		Object obj = bean;
 		String dump = dumper.serialize(obj);
 		assertEquals(dump, "{\"name\":\"parent\"}");
+	}
+	@Test()
+	public void testShouldDumpEmptyCollectionBeanPropertiesWhenConfigured(){
+		dumper.setSkipEmptyCollections(false);
+		ParentBean bean = new ParentBean();
+		bean.setName("parent");
+		bean.setChildren(new ArrayList<TestBean>());
+
+ 		Object obj = bean;
+		String dump = dumper.serialize(obj);
+		assertTrue(dump.contains("[]"));
 	}
 	@Test()
 	@SuppressWarnings("unchecked")

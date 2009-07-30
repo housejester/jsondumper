@@ -10,4 +10,6 @@ public interface JsonSerializer {
 	void setEscapeNonAsciiRange(boolean escapeNonAsciiRange);
 	void setMaxDecimalDigits(int maxDigits);
 	void setMinDecimalDigits(int minDigits);
+	void setSkipNulls(boolean skip);
+	void setSkipEmptyCollections(boolean skip);
 }

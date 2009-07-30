@@ -24,5 +24,11 @@ public abstract class AbstractJsonSerializer implements JsonSerializer{
 
 	public void setMinDecimalDigits(int minDigits) {
 	}
+
+	public void setSkipNulls(boolean skip) {
+	}
+
+	public void setSkipEmptyCollections(boolean skip) {
+	}
 	
 }
