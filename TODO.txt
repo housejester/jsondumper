@@ -8,3 +8,4 @@
 - Consider making the jsonappenderregistry respect order so that Float,Double,BigDecimal can be listed before Number and get their own
  	appender (and the if check in the number appender can be removed).
 - Remove String serialize(Object) from the JsonSerializer interface...move to a utility.
+- Add CustomSerializerFactory with create(JsonSerializer, JsonSerializerSettings) for (better?) pluggable serializer support.  This would allow for the dumper to hide the notion of the walker altogether.  When a custom serializer is present for a class, then the dumper makes the node walker for that class a VISIT_ONLY one.  It could still allow a node walker factory to be specified, but that would be rarely needed...but convenient if you had a nodewalker for your needs already (like in Rally with TypeDef/AttributeDef node walker)
